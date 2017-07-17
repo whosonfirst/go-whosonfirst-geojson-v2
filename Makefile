@@ -14,7 +14,6 @@ self:   prep rmdeps
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst
 	cp geojson/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson/
 	cp feature/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature/
-	cp spatial/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/spatial/
 	cp whosonfirst/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst/
 	cp -r vendor/src/* src/
 
@@ -22,8 +21,7 @@ rmdeps:
 	if test -d src; then rm -rf src; fi 
 
 deps:   rmdeps
-	# @GOPATH=$(GOPATH) go get -u "github.com/dhconnelly/rtreego"
-	# @GOPATH=$(GOPATH) go get -u "github.com/kellydunn/golang-geo"
+	@GOPATH=$(GOPATH) go get -u "github.com/skelterjohn/geom"
 	@GOPATH=$(GOPATH) go get -u "github.com/tidwall/gjson"
 
 vendor-deps: deps
@@ -37,11 +35,7 @@ fmt:
 	go fmt cmd/*.go
 	go fmt geojson/*.go
 	go fmt feature/*.go
-	go fmt spatial/*.go
 	go fmt whosonfirst/*.go
 
 bin:	self
-	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-contains cmd/wof-geojson-contains.go
 	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-dump cmd/wof-geojson-dump.go
-	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-enspatialize cmd/wof-geojson-enspatialize.go
-	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-polygons cmd/wof-geojson-polygons.go

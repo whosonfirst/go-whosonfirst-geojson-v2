@@ -3,35 +3,23 @@ package feature
 import (
 	"encoding/json"
 	"errors"
+	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
 )
 
-type WOFCoordinate struct {
-	geojson.Coordinate
-	lat float64
-	lon float64
-}
-
-type WOFBoundingBox struct {
-	geojson.BoundingBox
-	sw geojson.Coordinate
-	ne geojson.Coordinate
-}
-
-type WOFBounds struct {
-	geojson.Bounds
-	bboxes []geojson.BoundingBox
-}
-
-type WOFRing struct {
-	geojson.Ring
-	coords []geojson.Coordinate
-}
-
 type WOFPolygon struct {
-	exterior geojson.Ring
-	interior []geojson.Ring
+	geojson.Polygon
+	exterior geom.Polygon
+	interior []geom.Polygon
+}
+
+func (p WOFPolygon) ExteriorRing() geom.Polygon {
+	return p.exterior
+}
+
+func (p WOFPolygon) InteriorRings() []geom.Polygon {
+	return p.interior
 }
 
 type WOFFeature struct {
@@ -39,133 +27,50 @@ type WOFFeature struct {
 	body []byte
 }
 
-func NewWOFCoordinateFromLatLons(lat float64, lon float64) (geojson.Coordinate, error) {
+func NewCoordinateFromLatLons(lat float64, lon float64) (geom.Coord, error) {
 
-	coord := WOFCoordinate{
-		lat: lat,
-		lon: lon,
-	}
+	coord := new(geom.Coord)
+	
+	coord.Y = lat
+	coord.X = lon
 
-	return &coord, nil
+	return *coord, nil
 }
 
-func NewWOFBoundingBoxFromLatLons(minlat float64, minlon float64, maxlat float64, maxlon float64) (geojson.BoundingBox, error) {
+func NewRectFromLatLons(minlat float64, minlon float64, maxlat float64, maxlon float64) (geom.Rect, error) {
 
-	min_coord, err := NewWOFCoordinateFromLatLons(minlat, minlon)
+	bbox := new(geom.Rect)
+	
+	min_coord, err := NewCoordinateFromLatLons(minlat, minlon)
 
 	if err != nil {
-		return nil, err
+		return *bbox, err
 	}
 
-	max_coord, err := NewWOFCoordinateFromLatLons(maxlat, maxlon)
+	max_coord, err := NewCoordinateFromLatLons(maxlat, maxlon)
 
 	if err != nil {
-		return nil, err
+		return *bbox, err
+	}
+	
+	bbox.Min = min_coord
+	bbox.Max = max_coord
+
+	return *bbox, nil
+}
+
+func NewPolygonFromCoords(coords []geom.Coord) (geom.Polygon, error) {
+
+	path := geom.Path{}
+
+	for _, c := range coords {
+		path.AddVertex(c)
 	}
 
-	bbox := WOFBoundingBox{
-		sw: min_coord,
-		ne: max_coord,
-	}
+	poly := new(geom.Polygon)
+	poly.Path = path
 
-	return &bbox, nil
-}
-
-func NewWOFBoundsFromBoundingBoxes(bboxes []geojson.BoundingBox) (*WOFBounds, error) {
-
-	bounds := WOFBounds{
-		bboxes: bboxes,
-	}
-
-	return &bounds, nil
-}
-
-func NewWOFRingFromCoords(coords []geojson.Coordinate) (geojson.Ring, error) {
-
-	r := WOFRing{
-		coords: coords,
-	}
-
-	return &r, nil
-}
-
-func (c WOFCoordinate) Latitude() float64 {
-	return c.lat
-}
-
-func (c WOFCoordinate) Longitude() float64 {
-	return c.lon
-}
-
-func (b WOFBoundingBox) MinCoordinate() geojson.Coordinate {
-	return b.sw
-}
-
-func (b WOFBoundingBox) MaxCoordinate() geojson.Coordinate {
-	return b.ne
-}
-
-func (b WOFBounds) MBR() geojson.BoundingBox {
-
-	minlat := 0.0
-	minlon := 0.0
-	maxlat := 0.0
-	maxlon := 0.0
-
-	for _, bbox := range b.BoundingBoxes() {
-
-		min := bbox.MinCoordinate()
-		max := bbox.MaxCoordinate()
-
-		if min.Latitude() < minlat {
-			minlat = min.Latitude()
-		}
-
-		if min.Longitude() < minlon {
-			minlon = min.Longitude()
-		}
-
-		if max.Latitude() > maxlat {
-			maxlat = max.Latitude()
-		}
-
-		if max.Longitude() > maxlon {
-			maxlon = max.Longitude()
-		}
-	}
-
-	min_coord := WOFCoordinate{
-		lat: minlat,
-		lon: minlon,
-	}
-
-	max_coord := WOFCoordinate{
-		lat: maxlat,
-		lon: maxlon,
-	}
-
-	bbox := WOFBoundingBox{
-		sw: &min_coord,
-		ne: &max_coord,
-	}
-
-	return &bbox
-}
-
-func (b WOFBounds) BoundingBoxes() []geojson.BoundingBox {
-	return b.bboxes
-}
-
-func (r WOFRing) Coordinates() []geojson.Coordinate {
-	return r.coords
-}
-
-func (p WOFPolygon) ExteriorRing() geojson.Ring {
-	return p.exterior
-}
-
-func (p WOFPolygon) InteriorRings() []geojson.Ring {
-	return p.interior
+	return *poly, nil
 }
 
 func NewWOFFeature(body []byte) (geojson.Feature, error) {
@@ -286,74 +191,6 @@ func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
 	return nil, errors.New("Please write me")
 }
 
-func (f *WOFFeature) Bounds() (geojson.Bounds, error) {
-
-	t := gjson.GetBytes(f.body, "geometry.type")
-
-	if !t.Exists() {
-		return nil, errors.New("Failed to determine geometry.type")
-	}
-
-	c := gjson.GetBytes(f.body, "geometry.coordinates")
-
-	if !c.Exists() {
-		return nil, errors.New("Failed to determine geometry.coordinates")
-	}
-
-	coords := c.Array()
-
-	if len(coords) == 0 {
-		return nil, errors.New("Invalid geometry.coordinates")
-	}
-
-	boxes := make([]geojson.BoundingBox, 0)
-
-	if t.String() == "Point" {
-
-		lat := coords[1].Float()
-		lon := coords[0].Float()
-
-		bbox, err := NewWOFBoundingBoxFromLatLons(lat, lon, lat, lon)
-
-		if err != nil {
-			return nil, err
-		}
-
-		boxes = append(boxes, bbox)
-	}
-
-	if t.String() == "Polygon" {
-
-		outer := coords[0]
-		bbox, err := f.gjson_linearRingToBoundingBox(outer)
-
-		if err != nil {
-			return nil, err
-		}
-
-		boxes = append(boxes, bbox)
-	}
-
-	if t.String() == "MultiPolygon" {
-
-		for _, rings := range coords {
-
-			poly := rings.Array()
-
-			outer := poly[0]
-			bbox, err := f.gjson_linearRingToBoundingBox(outer)
-
-			if err != nil {
-				return nil, err
-			}
-
-			boxes = append(boxes, bbox)
-		}
-	}
-
-	return NewWOFBoundsFromBoundingBoxes(boxes)
-}
-
 func (f *WOFFeature) IsCurrent() (bool, bool) {
 
 	possible := []string{
@@ -445,7 +282,7 @@ func (f *WOFFeature) possibleString(possible []string, d string) string {
 	return d
 }
 
-func (f *WOFFeature) gjson_linearRingToBoundingBox(ring gjson.Result) (geojson.BoundingBox, error) {
+func (f *WOFFeature) gjson_linearRingToRect(ring gjson.Result) (geom.Rect, error) {
 
 	minlat := 0.0
 	minlon := 0.0
@@ -476,12 +313,12 @@ func (f *WOFFeature) gjson_linearRingToBoundingBox(ring gjson.Result) (geojson.B
 		}
 	}
 
-	return NewWOFBoundingBoxFromLatLons(minlat, minlon, maxlat, maxlon)
+	return NewRectFromLatLons(minlat, minlon, maxlat, maxlon)
 }
 
-func (f *WOFFeature) gjson_linearRingToWOFRing(ring gjson.Result) (geojson.Ring, error) {
+func (f *WOFFeature) gjson_linearRingToPolygon(ring gjson.Result) (geom.Polygon, error) {
 
-	coords := make([]geojson.Coordinate, 0)
+	coords := make([]geom.Coord, 0)
 
 	for _, pt := range ring.Array() {
 
@@ -490,14 +327,9 @@ func (f *WOFFeature) gjson_linearRingToWOFRing(ring gjson.Result) (geojson.Ring,
 		lat := lonlat[1].Float()
 		lon := lonlat[0].Float()
 
-		coord, err := NewWOFCoordinateFromLatLons(lat, lon)
-
-		if err != nil {
-			return nil, err
-		}
-
+		coord, _ := NewCoordinateFromLatLons(lat, lon)
 		coords = append(coords, coord)
 	}
 
-	return NewWOFRingFromCoords(coords)
+	return NewPolygonFromCoords(coords)
 }

@@ -1,6 +1,8 @@
 package geojson
 
-import ()
+import (
+	"github.com/skelterjohn/geom"
+)
 
 type Feature interface {
 	Type() string
@@ -9,30 +11,15 @@ type Feature interface {
 	Placetype() string
 	ToString() string
 	ToBytes() []byte
-	Bounds() (Bounds, error)
+	// Bounds() (Bounds, error)
 	Polygons() ([]Polygon, error)
+	// SPR() (StandardPlaceResponse, error)
 }
 
-type Bounds interface {
-	MBR() BoundingBox
-	BoundingBoxes() []BoundingBox
-}
-
-type Coordinate interface {
-	Latitude() float64
-	Longitude() float64
-}
-
-type BoundingBox interface {
-	MinCoordinate() Coordinate
-	MaxCoordinate() Coordinate
-}
-
-type Ring interface {
-	Coordinates() []Coordinate
+type StandardPlaceResponse interface {
 }
 
 type Polygon interface {
-	ExteriorRing() Ring
-	InteriorRings() [][]Ring
+	ExteriorRing() geom.Polygon
+	InteriorRings() [][]geom.Polygon
 }
