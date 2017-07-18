@@ -21,5 +21,5 @@ type StandardPlaceResponse interface {
 
 type Polygon interface {
 	ExteriorRing() geom.Polygon
-	InteriorRings() [][]geom.Polygon
+	InteriorRings() []geom.Polygon
 }

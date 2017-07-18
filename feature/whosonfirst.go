@@ -30,7 +30,7 @@ type WOFFeature struct {
 func NewCoordinateFromLatLons(lat float64, lon float64) (geom.Coord, error) {
 
 	coord := new(geom.Coord)
-	
+
 	coord.Y = lat
 	coord.X = lon
 
@@ -40,7 +40,7 @@ func NewCoordinateFromLatLons(lat float64, lon float64) (geom.Coord, error) {
 func NewRectFromLatLons(minlat float64, minlon float64, maxlat float64, maxlon float64) (geom.Rect, error) {
 
 	bbox := new(geom.Rect)
-	
+
 	min_coord, err := NewCoordinateFromLatLons(minlat, minlon)
 
 	if err != nil {
@@ -52,7 +52,7 @@ func NewRectFromLatLons(minlat float64, minlon float64, maxlat float64, maxlon f
 	if err != nil {
 		return *bbox, err
 	}
-	
+
 	bbox.Min = min_coord
 	bbox.Max = max_coord
 
@@ -188,7 +188,42 @@ func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
 		return nil, errors.New("Invalid geometry.coordinates")
 	}
 
-	return nil, errors.New("Please write me")
+	polys := make([]geojson.Polygon, 0)
+
+	switch t.String() {
+
+	case "Polygon":
+
+		// c === rings (below)
+
+		polygon, err := f.gjson_coordsToWOFPolygon(c)
+
+		if err != nil {
+			return nil, err
+		}
+
+		polys = append(polys, polygon)
+
+	case "MultiPolygon":
+
+		for _, rings := range coords {
+
+			polygon, err := f.gjson_coordsToWOFPolygon(rings)
+
+			if err != nil {
+				return nil, err
+			}
+
+			polys = append(polys, polygon)
+
+		}
+
+	default:
+
+		return nil, errors.New("Invalid geometry type")
+	}
+
+	return polys, nil
 }
 
 func (f *WOFFeature) IsCurrent() (bool, bool) {
@@ -282,45 +317,45 @@ func (f *WOFFeature) possibleString(possible []string, d string) string {
 	return d
 }
 
-func (f *WOFFeature) gjson_linearRingToRect(ring gjson.Result) (geom.Rect, error) {
+func (f *WOFFeature) gjson_coordsToWOFPolygon(r gjson.Result) (geojson.Polygon, error) {
 
-	minlat := 0.0
-	minlon := 0.0
-	maxlat := 0.0
-	maxlon := 0.0
+	rings := r.Array()
 
-	for _, pt := range ring.Array() {
+	count_rings := len(rings)
+	count_interior := count_rings - 1
 
-		lonlat := pt.Array()
+	exterior, err := f.gjson_linearRingToGeomPolygon(rings[0])
 
-		lat := lonlat[1].Float()
-		lon := lonlat[0].Float()
-
-		if lat < minlat {
-			minlat = lat
-		}
-
-		if lon < minlon {
-			minlon = lon
-		}
-
-		if lat > maxlat {
-			maxlat = lat
-		}
-
-		if lon > maxlon {
-			maxlon = lon
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	return NewRectFromLatLons(minlat, minlon, maxlat, maxlon)
+	interior := make([]geom.Polygon, count_interior)
+
+	for i := 1; i < count_interior; i++ {
+
+		poly, err := f.gjson_linearRingToGeomPolygon(rings[i])
+
+		if err != nil {
+			return nil, err
+		}
+
+		interior = append(interior, poly)
+	}
+
+	polygon := WOFPolygon{
+		exterior: exterior,
+		interior: interior,
+	}
+
+	return &polygon, nil
 }
 
-func (f *WOFFeature) gjson_linearRingToPolygon(ring gjson.Result) (geom.Polygon, error) {
+func (f *WOFFeature) gjson_linearRingToGeomPolygon(r gjson.Result) (geom.Polygon, error) {
 
 	coords := make([]geom.Coord, 0)
 
-	for _, pt := range ring.Array() {
+	for _, pt := range r.Array() {
 
 		lonlat := pt.Array()
 
