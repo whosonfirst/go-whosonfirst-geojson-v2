@@ -22,7 +22,7 @@ Yeah, I don't really like it either but this package is basically 100% backwards
 
 ## Interfaces
 
-Unlike the first `go-whosonfirst-geojson` package this one at least attempts to define a simplified interface for working with GeoJSON features.
+Unlike the first `go-whosonfirst-geojson` package this one at least attempts to define a simplified interface for working with GeoJSON features. These are still in flux.
 
 _Please finish writing me._
 
@@ -36,8 +36,28 @@ type Feature interface {
 	Placetype() string
 	ToString() string
 	ToBytes() []byte
-	Bounds() (Bounds, error)
+	BoundingBoxes() (BoundingBoxes, error)
 	Polygons() ([]Polygon, error)
+	ContainsCoord(geom.Coord) (bool, error)
+}
+```
+
+### geojson.BoundingBoxes
+
+```
+type BoundingBoxes interface {
+	Bounds() []*geom.Rect
+	MBR() geom.Rect
+}
+```
+
+### geojson.Polygon
+
+```
+type Polygon interface {
+	ExteriorRing() geom.Polygon
+	InteriorRings() []geom.Polygon
+	ContainsCoord(geom.Coord) bool
 }
 ```
 
@@ -67,4 +87,6 @@ func main() {
 
 ## See also
 
+* github.com/skelterjohn/geom
 * https://github.com/whosonfirst/go-whosonfirst-geojson
+
