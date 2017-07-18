@@ -6,6 +6,7 @@ import (
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
 type WOFPolygon struct {
@@ -22,55 +23,31 @@ func (p WOFPolygon) InteriorRings() []geom.Polygon {
 	return p.interior
 }
 
+func (p WOFPolygon) ContainsCoord(c geom.Coord) bool {
+
+	ext := p.ExteriorRing()
+
+	contains := false
+
+	if ext.ContainsCoord(c) {
+
+		contains = true
+
+		for _, int := range p.InteriorRings() {
+
+			if int.ContainsCoord(c) {
+				contains = false
+				break
+			}
+		}
+	}
+
+	return contains
+}
+
 type WOFFeature struct {
 	geojson.Feature
 	body []byte
-}
-
-func NewCoordinateFromLatLons(lat float64, lon float64) (geom.Coord, error) {
-
-	coord := new(geom.Coord)
-
-	coord.Y = lat
-	coord.X = lon
-
-	return *coord, nil
-}
-
-func NewRectFromLatLons(minlat float64, minlon float64, maxlat float64, maxlon float64) (geom.Rect, error) {
-
-	bbox := new(geom.Rect)
-
-	min_coord, err := NewCoordinateFromLatLons(minlat, minlon)
-
-	if err != nil {
-		return *bbox, err
-	}
-
-	max_coord, err := NewCoordinateFromLatLons(maxlat, maxlon)
-
-	if err != nil {
-		return *bbox, err
-	}
-
-	bbox.Min = min_coord
-	bbox.Max = max_coord
-
-	return *bbox, nil
-}
-
-func NewPolygonFromCoords(coords []geom.Coord) (geom.Polygon, error) {
-
-	path := geom.Path{}
-
-	for _, c := range coords {
-		path.AddVertex(c)
-	}
-
-	poly := new(geom.Polygon)
-	poly.Path = path
-
-	return *poly, nil
 }
 
 func NewWOFFeature(body []byte) (geojson.Feature, error) {
@@ -87,6 +64,27 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 	}
 
 	return &f, nil
+}
+
+func (f *WOFFeature) ContainsCoord(c geom.Coord) (bool, error) {
+
+	polys, err := f.Polygons()
+
+	if err != nil {
+		return false, err
+	}
+
+	contains := false
+	
+	for _, p := range polys {
+
+		if p.ContainsCoord(c) {
+			contains = true
+			break
+		}
+	}
+
+	return contains, nil
 }
 
 func (f *WOFFeature) ToString() string {
@@ -362,9 +360,9 @@ func (f *WOFFeature) gjson_linearRingToGeomPolygon(r gjson.Result) (geom.Polygon
 		lat := lonlat[1].Float()
 		lon := lonlat[0].Float()
 
-		coord, _ := NewCoordinateFromLatLons(lat, lon)
+		coord, _ := utils.NewCoordinateFromLatLons(lat, lon)
 		coords = append(coords, coord)
 	}
 
-	return NewPolygonFromCoords(coords)
+	return utils.NewPolygonFromCoords(coords)
 }

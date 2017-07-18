@@ -13,13 +13,18 @@ type Feature interface {
 	ToBytes() []byte
 	// Bounds() (Bounds, error)
 	Polygons() ([]Polygon, error)
-	// SPR() (StandardPlaceResponse, error)
+	// Centroids() ([]Centroid, eror)
+	// SPR() (spr.StandardPlaceResponse, error)
+	ContainsCoord(geom.Coord) (bool, error)
 }
 
-type StandardPlaceResponse interface {
-}
+// type Centroid interface {
+//     Source sources.WOFSource
+//     Coord geom.Coord
+// }
 
 type Polygon interface {
 	ExteriorRing() geom.Polygon
 	InteriorRings() []geom.Polygon
+	ContainsCoord(geom.Coord) bool
 }

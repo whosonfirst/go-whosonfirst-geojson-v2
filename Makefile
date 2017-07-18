@@ -10,10 +10,11 @@ self:   prep rmdeps
 	if test -d src; then rm -rf src; fi
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature
-	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/spatial
+	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst
 	cp geojson/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson/
 	cp feature/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature/
+	cp utils/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils/
 	cp whosonfirst/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst/
 	cp -r vendor/src/* src/
 
@@ -35,6 +36,7 @@ fmt:
 	go fmt cmd/*.go
 	go fmt geojson/*.go
 	go fmt feature/*.go
+	go fmt utils/*.go
 	go fmt whosonfirst/*.go
 
 bin:	self
