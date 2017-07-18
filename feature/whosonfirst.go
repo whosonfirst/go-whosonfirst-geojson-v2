@@ -9,6 +9,20 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
+type WOFBoundingBoxes struct {
+	geojson.BoundingBoxes
+	bounds []*geom.Rect
+	mbr    geom.Rect
+}
+
+func (b WOFBoundingBoxes) Bounds() []*geom.Rect {
+	return b.bounds
+}
+
+func (b WOFBoundingBoxes) MBR() geom.Rect {
+	return b.mbr
+}
+
 type WOFPolygon struct {
 	geojson.Polygon
 	exterior geom.Polygon
@@ -75,7 +89,7 @@ func (f *WOFFeature) ContainsCoord(c geom.Coord) (bool, error) {
 	}
 
 	contains := false
-	
+
 	for _, p := range polys {
 
 		if p.ContainsCoord(c) {
@@ -164,6 +178,34 @@ func (f *WOFFeature) Hierarchy() []map[string]int64 {
 	}
 
 	return hierarchies
+}
+
+func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
+
+	polys, err := f.Polygons()
+
+	if err != nil {
+		return nil, err
+	}
+
+	mbr := geom.NilRect()
+	bounds := make([]*geom.Rect, 0)
+
+	for _, poly := range polys {
+
+		ext := poly.ExteriorRing()
+		b := ext.Path.Bounds()
+
+		mbr.ExpandToContainRect(*b)
+		bounds = append(bounds, b)
+	}
+
+	wb := WOFBoundingBoxes{
+		bounds: bounds,
+		mbr:    mbr,
+	}
+
+	return wb, nil
 }
 
 func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {

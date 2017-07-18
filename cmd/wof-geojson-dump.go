@@ -31,8 +31,14 @@ func main() {
 
 		coord, _ := utils.NewCoordinateFromLatLons(0.0, 0.0)
 		contains, _ := f.ContainsCoord(coord)
-			
+
 		fmt.Printf("Contains %v %t\n", coord, contains)
+
+		bboxes, _ := f.BoundingBoxes()
+
+		fmt.Printf("Count boxes %d\n", len(bboxes.Bounds()))
+		fmt.Printf("MBR %s\n", bboxes.MBR())
+
 	}
 
 }

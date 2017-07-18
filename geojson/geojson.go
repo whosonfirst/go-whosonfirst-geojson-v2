@@ -11,7 +11,7 @@ type Feature interface {
 	Placetype() string
 	ToString() string
 	ToBytes() []byte
-	// Bounds() (Bounds, error)
+	BoundingBoxes() (BoundingBoxes, error)
 	Polygons() ([]Polygon, error)
 	// Centroids() ([]Centroid, eror)
 	// SPR() (spr.StandardPlaceResponse, error)
@@ -22,6 +22,11 @@ type Feature interface {
 //     Source sources.WOFSource
 //     Coord geom.Coord
 // }
+
+type BoundingBoxes interface {
+	Bounds() []*geom.Rect
+	MBR() geom.Rect
+}
 
 type Polygon interface {
 	ExteriorRing() geom.Polygon
