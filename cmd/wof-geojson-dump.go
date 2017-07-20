@@ -41,6 +41,13 @@ func main() {
 		fmt.Printf("Count boxes %d\n", len(bboxes.Bounds()))
 		fmt.Printf("MBR %s\n", bboxes.MBR())
 
+		wof, err := feature.LoadWOFFeatureFromFile(path)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("WOF repo is %s\n", whosonfirst.Repo(wof))
 	}
 
 }
