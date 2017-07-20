@@ -6,36 +6,6 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
-func Id(f geojson.Feature) int64 {
-
-	possible := []string{
-		"properties.f:id",
-		"id",
-	}
-
-	return utils.Int64Property(f, possible, -1)
-}
-
-func Name(f geojson.Feature) string {
-
-	possible := []string{
-		"properties.wof:name",
-		"properties.name",
-	}
-
-	return utils.StringProperty(f, possible, "a place with no name")
-}
-
-func Placetype(f geojson.Feature) string {
-
-	possible := []string{
-		"properties.wof:placetype",
-		"properties.placetype",
-	}
-
-	return utils.StringProperty(f, possible, "here be dragons")
-}
-
 func Centroid(f geojson.Feature) (float64, float64) {
 
 	var lat gjson.Result
@@ -56,6 +26,63 @@ func Centroid(f geojson.Feature) (float64, float64) {
 	}
 
 	return 0.0, 0.0
+}
+
+func Country(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.wof:country",
+	}
+
+	return utils.StringProperty(f, possible, "XX")
+}
+
+func Id(f geojson.Feature) int64 {
+
+	possible := []string{
+		"properties.wof:id",
+		"id",
+	}
+
+	return utils.Int64Property(f, possible, -1)
+}
+
+func Name(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.wof:name",
+		"properties.name",
+	}
+
+	return utils.StringProperty(f, possible, "a place with no name")
+}
+
+func ParentId(f geojson.Feature) int64 {
+
+	possible := []string{
+		"properties.wof:parent_id",
+	}
+
+	return utils.Int64Property(f, possible, -1)
+}
+
+func Placetype(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.wof:placetype",
+		"properties.placetype",
+	}
+
+	return utils.StringProperty(f, possible, "here be dragons")
+}
+
+func Repo(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.wof:repo",
+	}
+
+	return utils.StringProperty(f, possible, "whosonfirst-data-xx")
 }
 
 func IsCurrent(f geojson.Feature) (bool, bool) {
