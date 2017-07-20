@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
@@ -79,7 +79,7 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 	required := []string{
 		"properties.wof:id",
 		"properties.wof:name",
-		"properties.wof:placetype",		
+		"properties.wof:placetype",
 	}
 
 	err = utils.EnsureProperties(body, required)
@@ -87,7 +87,7 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	f := WOFFeature{
 		body: body,
 	}

@@ -3,20 +3,20 @@ package feature
 import (
 	"encoding/json"
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"	
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"io/ioutil"
 	"os"
 )
 
 func LoadFeatureFromFile(path string) (geojson.Feature, error) {
 
-     	body, err := UnmarshalFeatureFromFile(path)
+	body, err := UnmarshalFeatureFromFile(path)
 
 	if err != nil {
-	   return nil, err
+		return nil, err
 	}
-	
+
 	wofid := gjson.GetBytes(body, "properties.wof:id")
 
 	if wofid.Exists() {
@@ -26,18 +26,18 @@ func LoadFeatureFromFile(path string) (geojson.Feature, error) {
 	return NewGeoJSONFeature(body)
 }
 
-func LoadWOFFeatureFromFile(path string) (geojson.Feature, error){
+func LoadWOFFeatureFromFile(path string) (geojson.Feature, error) {
 
-     	body, err := UnmarshalFeatureFromFile(path)
+	body, err := UnmarshalFeatureFromFile(path)
 
 	if err != nil {
-	   return nil, err
+		return nil, err
 	}
 
 	return NewWOFFeature(body)
 }
 
-func UnmarshalFeatureFromFile(path string) ([]byte, error){
+func UnmarshalFeatureFromFile(path string) ([]byte, error) {
 
 	fh, err := os.Open(path)
 
@@ -71,8 +71,8 @@ func UnmarshalFeatureFromFile(path string) ([]byte, error){
 	err = utils.EnsureProperties(body, properties)
 
 	if err != nil {
-	   return nil, err
+		return nil, err
 	}
-	
+
 	return body, nil
 }

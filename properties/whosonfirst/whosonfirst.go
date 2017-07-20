@@ -2,7 +2,7 @@ package whosonfirst
 
 import (
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
@@ -34,7 +34,7 @@ func Country(f geojson.Feature) string {
 		"properties.wof:country",
 	}
 
-	return utils.StringProperty(f, possible, "XX")
+	return utils.StringProperty(f.ToBytes(), possible, "XX")
 }
 
 func Id(f geojson.Feature) int64 {
@@ -44,7 +44,7 @@ func Id(f geojson.Feature) int64 {
 		"id",
 	}
 
-	return utils.Int64Property(f, possible, -1)
+	return utils.Int64Property(f.ToBytes(), possible, -1)
 }
 
 func Name(f geojson.Feature) string {
@@ -54,7 +54,7 @@ func Name(f geojson.Feature) string {
 		"properties.name",
 	}
 
-	return utils.StringProperty(f, possible, "a place with no name")
+	return utils.StringProperty(f.ToBytes(), possible, "a place with no name")
 }
 
 func ParentId(f geojson.Feature) int64 {
@@ -63,7 +63,7 @@ func ParentId(f geojson.Feature) int64 {
 		"properties.wof:parent_id",
 	}
 
-	return utils.Int64Property(f, possible, -1)
+	return utils.Int64Property(f.ToBytes(), possible, -1)
 }
 
 func Placetype(f geojson.Feature) string {
@@ -73,7 +73,7 @@ func Placetype(f geojson.Feature) string {
 		"properties.placetype",
 	}
 
-	return utils.StringProperty(f, possible, "here be dragons")
+	return utils.StringProperty(f.ToBytes(), possible, "here be dragons")
 }
 
 func Repo(f geojson.Feature) string {
@@ -82,7 +82,7 @@ func Repo(f geojson.Feature) string {
 		"properties.wof:repo",
 	}
 
-	return utils.StringProperty(f, possible, "whosonfirst-data-xx")
+	return utils.StringProperty(f.ToBytes(), possible, "whosonfirst-data-xx")
 }
 
 func IsCurrent(f geojson.Feature) (bool, bool) {
@@ -91,7 +91,7 @@ func IsCurrent(f geojson.Feature) (bool, bool) {
 		"properties.mz_iscurrent",
 	}
 
-	v := utils.Int64Property(f, possible, -1)
+	v := utils.Int64Property(f.ToBytes(), possible, -1)
 
 	if v == 1 {
 		return true, true
@@ -118,7 +118,7 @@ func IsDeprecated(f geojson.Feature) bool {
 		"properties.edtf:deprecated",
 	}
 
-	v := utils.StringProperty(f, possible, "uuuu")
+	v := utils.StringProperty(f.ToBytes(), possible, "uuuu")
 
 	if v != "" && v != "u" && v != "uuuu" {
 		return true
@@ -133,7 +133,7 @@ func IsSuperseded(f geojson.Feature) bool {
 		"properties.edtf:superseded",
 	}
 
-	v := utils.StringProperty(f, possible, "uuuu")
+	v := utils.StringProperty(f.ToBytes(), possible, "uuuu")
 
 	if v != "" && v != "u" && v != "uuuu" {
 		return true

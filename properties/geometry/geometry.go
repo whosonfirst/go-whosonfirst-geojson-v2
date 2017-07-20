@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
@@ -31,5 +31,5 @@ func Type(f geojson.Feature) string {
 		"geometry.type",
 	}
 
-	return utils.StringProperty(f, possible, "unknown")
+	return utils.StringProperty(f.ToBytes(), possible, "unknown")
 }

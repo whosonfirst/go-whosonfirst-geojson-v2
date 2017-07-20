@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
@@ -124,7 +124,7 @@ func (f *GeoJSONFeature) Id() string {
 		"properties.id",
 	}
 
-	return utils.StringProperty(f, possible, "")
+	return utils.StringProperty(f.ToBytes(), possible, "")
 }
 
 func (f *GeoJSONFeature) Name() string {
@@ -133,7 +133,7 @@ func (f *GeoJSONFeature) Name() string {
 		"properties.name",
 	}
 
-	return utils.StringProperty(f, possible, "")
+	return utils.StringProperty(f.ToBytes(), possible, "")
 }
 
 func (f *GeoJSONFeature) Placetype() string {
@@ -142,7 +142,7 @@ func (f *GeoJSONFeature) Placetype() string {
 		"properties.placetype",
 	}
 
-	return utils.StringProperty(f, possible, "")
+	return utils.StringProperty(f.ToBytes(), possible, "")
 }
 
 func (f *GeoJSONFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {

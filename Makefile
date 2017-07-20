@@ -8,12 +8,12 @@ prep:
 
 self:   prep rmdeps
 	if test -d src; then rm -rf src; fi
-	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson
+	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst
-	cp -r geojson/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson/
+	cp -r *.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/
 	cp -r feature/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature/
 	cp -r properties/ src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/
 	cp -r utils/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils/
@@ -35,11 +35,11 @@ vendor-deps: deps
 
 fmt:
 	go fmt cmd/*.go
-	go fmt geojson/*.go
 	go fmt feature/*.go
 	go fmt properties/geometry/*.go
 	go fmt properties/whosonfirst/*.go
 	go fmt utils/*.go
+	go fmt *.go
 
 bin:	self
 	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-dump cmd/wof-geojson-dump.go

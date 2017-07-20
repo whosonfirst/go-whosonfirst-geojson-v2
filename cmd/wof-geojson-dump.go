@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"	
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/feature"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"log"
 )
 
@@ -25,7 +25,7 @@ func main() {
 		fmt.Printf("# %s\n", path)
 
 		fmt.Printf("ID is %s\n", f.Id())
-		fmt.Printf("WOF ID is %d\n", whosonfirst.Id(f))		
+		fmt.Printf("WOF ID is %d\n", whosonfirst.Id(f))
 		fmt.Printf("Name is %s\n", f.Name())
 		fmt.Printf("Placetype is %s\n", f.Placetype())
 
