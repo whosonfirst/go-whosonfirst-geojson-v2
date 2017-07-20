@@ -38,7 +38,8 @@ fmt:
 	go fmt cmd/*.go
 	go fmt geojson/*.go
 	go fmt feature/*.go
-	go fmt properties/*/*.go
+	go fmt properties/geometry/*.go
+	go fmt properties/whosonfirst/*.go
 	go fmt utils/*.go
 	go fmt whosonfirst/*.go
 

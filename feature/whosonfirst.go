@@ -6,7 +6,7 @@ import (
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"	
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
@@ -121,22 +121,22 @@ func (f *WOFFeature) ToBytes() []byte {
 
 func (f *WOFFeature) Type() string {
 
-     	return geometry.Type(f)
+	return geometry.Type(f)
 }
 
 func (f *WOFFeature) Id() int64 {
 
-     return whosonfirst.Id(f)
+	return whosonfirst.Id(f)
 }
 
 func (f *WOFFeature) Name() string {
 
-     return whosonfirst.Name(f)
+	return whosonfirst.Name(f)
 }
 
 func (f *WOFFeature) Placetype() string {
 
-     return whosonfirst.Placetype(f)
+	return whosonfirst.Placetype(f)
 }
 
 func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
@@ -276,4 +276,3 @@ func (f *WOFFeature) gjson_linearRingToGeomPolygon(r gjson.Result) (geom.Polygon
 
 	return utils.NewPolygonFromCoords(coords)
 }
-

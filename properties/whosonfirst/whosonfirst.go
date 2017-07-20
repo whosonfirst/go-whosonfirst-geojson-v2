@@ -3,7 +3,7 @@ package whosonfirst
 import (
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"	
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
 func Id(f geojson.Feature) int64 {
@@ -34,6 +34,28 @@ func Placetype(f geojson.Feature) string {
 	}
 
 	return utils.StringProperty(f, possible, "here be dragons")
+}
+
+func Centroid(f geojson.Feature) (float64, float64) {
+
+	var lat gjson.Result
+	var lon gjson.Result
+
+	lat = gjson.GetBytes(f.ToBytes(), "properties.lbl:latitude")
+	lon = gjson.GetBytes(f.ToBytes(), "properties.lbl:longitude")
+
+	if lat.Exists() && lon.Exists() {
+		return lat.Float(), lon.Float()
+	}
+
+	lat = gjson.GetBytes(f.ToBytes(), "properties.geom:latitude")
+	lon = gjson.GetBytes(f.ToBytes(), "properties.geom:longitude")
+
+	if lat.Exists() && lon.Exists() {
+		return lat.Float(), lon.Float()
+	}
+
+	return 0.0, 0.0
 }
 
 func IsCurrent(f geojson.Feature) (bool, bool) {
@@ -122,4 +144,3 @@ func Hierarchy(f geojson.Feature) []map[string]int64 {
 
 	return hierarchies
 }
-
