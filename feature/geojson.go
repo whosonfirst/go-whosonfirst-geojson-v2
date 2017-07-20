@@ -6,41 +6,38 @@ import (
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
-	"strconv"
 )
 
-type WOFBoundingBoxes struct {
+type GeoJSONBoundingBoxes struct {
 	geojson.BoundingBoxes
 	bounds []*geom.Rect
 	mbr    geom.Rect
 }
 
-func (b WOFBoundingBoxes) Bounds() []*geom.Rect {
+func (b GeoJSONBoundingBoxes) Bounds() []*geom.Rect {
 	return b.bounds
 }
 
-func (b WOFBoundingBoxes) MBR() geom.Rect {
+func (b GeoJSONBoundingBoxes) MBR() geom.Rect {
 	return b.mbr
 }
 
-type WOFPolygon struct {
+type GeoJSONPolygon struct {
 	geojson.Polygon
 	exterior geom.Polygon
 	interior []geom.Polygon
 }
 
-func (p WOFPolygon) ExteriorRing() geom.Polygon {
+func (p GeoJSONPolygon) ExteriorRing() geom.Polygon {
 	return p.exterior
 }
 
-func (p WOFPolygon) InteriorRings() []geom.Polygon {
+func (p GeoJSONPolygon) InteriorRings() []geom.Polygon {
 	return p.interior
 }
 
-func (p WOFPolygon) ContainsCoord(c geom.Coord) bool {
+func (p GeoJSONPolygon) ContainsCoord(c geom.Coord) bool {
 
 	ext := p.ExteriorRing()
 
@@ -62,12 +59,12 @@ func (p WOFPolygon) ContainsCoord(c geom.Coord) bool {
 	return contains
 }
 
-type WOFFeature struct {
+type GeoJSONFeature struct {
 	geojson.Feature
 	body []byte
 }
 
-func NewWOFFeature(body []byte) (geojson.Feature, error) {
+func NewGeoJSONFeature(body []byte) (geojson.Feature, error) {
 
 	var stub interface{}
 	err := json.Unmarshal(body, &stub)
@@ -76,26 +73,14 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 		return nil, err
 	}
 
-	required := []string{
-		"properties.wof:id",
-		"properties.wof:name",
-		"properties.wof:placetype",		
-	}
-
-	err = utils.EnsureProperties(body, required)
-
-	if err != nil {
-		return nil, err
-	}
-	
-	f := WOFFeature{
+	f := GeoJSONFeature{
 		body: body,
 	}
 
 	return &f, nil
 }
 
-func (f *WOFFeature) ContainsCoord(c geom.Coord) (bool, error) {
+func (f *GeoJSONFeature) ContainsCoord(c geom.Coord) (bool, error) {
 
 	polys, err := f.Polygons()
 
@@ -116,7 +101,7 @@ func (f *WOFFeature) ContainsCoord(c geom.Coord) (bool, error) {
 	return contains, nil
 }
 
-func (f *WOFFeature) ToString() string {
+func (f *GeoJSONFeature) ToString() string {
 
 	body, err := json.Marshal(f.body)
 
@@ -127,33 +112,40 @@ func (f *WOFFeature) ToString() string {
 	return string(body)
 }
 
-func (f *WOFFeature) ToBytes() []byte {
+func (f *GeoJSONFeature) ToBytes() []byte {
 
 	return f.body
 }
 
-func (f *WOFFeature) Type() string {
+func (f *GeoJSONFeature) Id() string {
 
-	return geometry.Type(f)
+	possible := []string{
+		"id",
+		"properties.id",
+	}
+
+	return utils.StringProperty(f, possible, "")
 }
 
-func (f *WOFFeature) Id() string {
+func (f *GeoJSONFeature) Name() string {
 
-	id := whosonfirst.Id(f)
-	return strconv.FormatInt(id, 10)
+	possible := []string{
+		"properties.name",
+	}
+
+	return utils.StringProperty(f, possible, "")
 }
 
-func (f *WOFFeature) Name() string {
+func (f *GeoJSONFeature) Placetype() string {
 
-	return whosonfirst.Name(f)
+	possible := []string{
+		"properties.placetype",
+	}
+
+	return utils.StringProperty(f, possible, "")
 }
 
-func (f *WOFFeature) Placetype() string {
-
-	return whosonfirst.Placetype(f)
-}
-
-func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
+func (f *GeoJSONFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
 
 	polys, err := f.Polygons()
 
@@ -173,7 +165,7 @@ func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
 		bounds = append(bounds, b)
 	}
 
-	wb := WOFBoundingBoxes{
+	wb := GeoJSONBoundingBoxes{
 		bounds: bounds,
 		mbr:    mbr,
 	}
@@ -181,7 +173,7 @@ func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
 	return wb, nil
 }
 
-func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
+func (f *GeoJSONFeature) Polygons() ([]geojson.Polygon, error) {
 
 	t := gjson.GetBytes(f.body, "geometry.type")
 
@@ -209,7 +201,7 @@ func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
 
 		// c === rings (below)
 
-		polygon, err := f.gjson_coordsToWOFPolygon(c)
+		polygon, err := f.gjson_coordsToGeoJSONPolygon(c)
 
 		if err != nil {
 			return nil, err
@@ -221,7 +213,7 @@ func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
 
 		for _, rings := range coords {
 
-			polygon, err := f.gjson_coordsToWOFPolygon(rings)
+			polygon, err := f.gjson_coordsToGeoJSONPolygon(rings)
 
 			if err != nil {
 				return nil, err
@@ -239,7 +231,7 @@ func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
 	return polys, nil
 }
 
-func (f *WOFFeature) gjson_coordsToWOFPolygon(r gjson.Result) (geojson.Polygon, error) {
+func (f *GeoJSONFeature) gjson_coordsToGeoJSONPolygon(r gjson.Result) (geojson.Polygon, error) {
 
 	rings := r.Array()
 
@@ -265,7 +257,7 @@ func (f *WOFFeature) gjson_coordsToWOFPolygon(r gjson.Result) (geojson.Polygon, 
 		interior = append(interior, poly)
 	}
 
-	polygon := WOFPolygon{
+	polygon := GeoJSONPolygon{
 		exterior: exterior,
 		interior: interior,
 	}
@@ -273,7 +265,7 @@ func (f *WOFFeature) gjson_coordsToWOFPolygon(r gjson.Result) (geojson.Polygon, 
 	return &polygon, nil
 }
 
-func (f *WOFFeature) gjson_linearRingToGeomPolygon(r gjson.Result) (geom.Polygon, error) {
+func (f *GeoJSONFeature) gjson_linearRingToGeomPolygon(r gjson.Result) (geom.Polygon, error) {
 
 	coords := make([]geom.Coord, 0)
 

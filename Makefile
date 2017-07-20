@@ -17,7 +17,6 @@ self:   prep rmdeps
 	cp -r feature/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature/
 	cp -r properties/ src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/
 	cp -r utils/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils/
-	cp -r whosonfirst/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst/
 	cp -r vendor/src/* src/
 
 rmdeps:
@@ -41,7 +40,6 @@ fmt:
 	go fmt properties/geometry/*.go
 	go fmt properties/whosonfirst/*.go
 	go fmt utils/*.go
-	go fmt whosonfirst/*.go
 
 bin:	self
 	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-dump cmd/wof-geojson-dump.go
