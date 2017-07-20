@@ -15,7 +15,7 @@ self:   prep rmdeps
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-geojson-v2/whosonfirst
 	cp -r *.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/
 	cp -r feature/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature/
-	cp -r properties/ src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/
+	cp -r properties/* src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/
 	cp -r utils/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils/
 	cp -r vendor/src/* src/
 
