@@ -6,6 +6,8 @@ import (
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geojson"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"	
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
@@ -119,65 +121,22 @@ func (f *WOFFeature) ToBytes() []byte {
 
 func (f *WOFFeature) Type() string {
 
-	possible := []string{
-		"geometry.type",
-	}
-
-	return f.possibleString(possible, "unknown")
+     	return geometry.Type(f)
 }
 
 func (f *WOFFeature) Id() int64 {
 
-	possible := []string{
-		"properties.f:id",
-		"id",
-	}
-
-	return f.possibleInt64(possible, -1)
+     return whosonfirst.Id(f)
 }
 
 func (f *WOFFeature) Name() string {
 
-	possible := []string{
-		"properties.wof:name",
-		"properties.name",
-	}
-
-	return f.possibleString(possible, "a place with no name")
+     return whosonfirst.Name(f)
 }
 
 func (f *WOFFeature) Placetype() string {
 
-	possible := []string{
-		"properties.wof:placetype",
-		"properties.placetype",
-	}
-
-	return f.possibleString(possible, "here be dragons")
-}
-
-func (f *WOFFeature) Hierarchy() []map[string]int64 {
-
-	hierarchies := make([]map[string]int64, 0)
-
-	possible := gjson.GetBytes(f.body, "properties.wof:hierarchy")
-
-	if possible.Exists() {
-
-		for _, h := range possible.Array() {
-
-			foo := make(map[string]int64)
-
-			for k, v := range h.Map() {
-
-				foo[k] = v.Int()
-			}
-
-			hierarchies = append(hierarchies, foo)
-		}
-	}
-
-	return hierarchies
+     return whosonfirst.Placetype(f)
 }
 
 func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
@@ -266,97 +225,6 @@ func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
 	return polys, nil
 }
 
-func (f *WOFFeature) IsCurrent() (bool, bool) {
-
-	possible := []string{
-		"properties.mz_iscurrent",
-	}
-
-	v := f.possibleInt64(possible, -1)
-
-	if v == 1 {
-		return true, true
-	}
-
-	if v == 0 {
-		return true, false
-	}
-
-	if f.IsDeprecated() {
-		return true, false
-	}
-
-	if f.IsSuperseded() {
-		return true, false
-	}
-
-	return false, false
-}
-
-func (f *WOFFeature) IsDeprecated() bool {
-
-	possible := []string{
-		"properties.edtf:deprecated",
-	}
-
-	v := f.possibleString(possible, "uuuu")
-
-	if v != "" && v != "u" && v != "uuuu" {
-		return true
-	}
-
-	return false
-}
-
-func (f *WOFFeature) IsSuperseded() bool {
-
-	possible := []string{
-		"properties.edtf:superseded",
-	}
-
-	v := f.possibleString(possible, "uuuu")
-
-	if v != "" && v != "u" && v != "uuuu" {
-		return true
-	}
-
-	by := gjson.GetBytes(f.body, "properties.wof:superseded_by")
-
-	if by.Exists() && len(by.Array()) > 0 {
-		return true
-	}
-
-	return false
-}
-
-func (f *WOFFeature) possibleInt64(possible []string, d int64) int64 {
-
-	for _, path := range possible {
-
-		v := gjson.GetBytes(f.body, path)
-
-		if v.Exists() {
-			return v.Int()
-		}
-	}
-
-	return d
-}
-
-func (f *WOFFeature) possibleString(possible []string, d string) string {
-
-	for _, path := range possible {
-
-		v := gjson.GetBytes(f.body, path)
-
-		if v.Exists() {
-			return v.String()
-		}
-	}
-
-	return d
-}
-
 func (f *WOFFeature) gjson_coordsToWOFPolygon(r gjson.Result) (geojson.Polygon, error) {
 
 	rings := r.Array()
@@ -408,3 +276,4 @@ func (f *WOFFeature) gjson_linearRingToGeomPolygon(r gjson.Result) (geom.Polygon
 
 	return utils.NewPolygonFromCoords(coords)
 }
+
