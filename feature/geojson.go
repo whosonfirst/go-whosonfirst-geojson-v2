@@ -31,7 +31,7 @@ func NewGeoJSONFeature(body []byte) (geojson.Feature, error) {
 
 func (f *GeoJSONFeature) ContainsCoord(c geom.Coord) (bool, error) {
 
-	return geometry.ContainsCoord(f, c)
+	return geometry.FeatureContainsCoord(f, c)
 }
 
 func (f *GeoJSONFeature) ToString() string {
@@ -79,9 +79,9 @@ func (f *GeoJSONFeature) Placetype() string {
 }
 
 func (f *GeoJSONFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
-	return geometry.BoundingBoxes(f)
+	return geometry.BoundingBoxesForFeature(f)
 }
 
 func (f *GeoJSONFeature) Polygons() ([]geojson.Polygon, error) {
-	return geometry.Polygons(f)
+	return geometry.PolygonsForFeature(f)
 }

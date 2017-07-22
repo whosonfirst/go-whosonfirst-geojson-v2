@@ -72,13 +72,13 @@ func (f *WOFFeature) Placetype() string {
 }
 
 func (f *WOFFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
-	return geometry.BoundingBoxes(f)
+	return geometry.BoundingBoxesForFeature(f)
 }
 
 func (f *WOFFeature) Polygons() ([]geojson.Polygon, error) {
-	return geometry.Polygons(f)
+	return geometry.PolygonsForFeature(f)
 }
 
 func (f *WOFFeature) ContainsCoord(c geom.Coord) (bool, error) {
-	return geometry.ContainsCoord(f, c)
+	return geometry.FeatureContainsCoord(f, c)
 }
