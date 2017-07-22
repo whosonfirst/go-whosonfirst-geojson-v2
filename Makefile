@@ -17,7 +17,7 @@ self:   prep rmdeps
 	cp -r *.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/
 	cp -r feature/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/feature/
 	cp -r geometry/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/geometry/
-	cp -r properties/ src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/
+	cp -r properties/* src/github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/
 	cp -r utils/*.go src/github.com/whosonfirst/go-whosonfirst-geojson-v2/utils/
 	cp -r vendor/src/* src/
 
