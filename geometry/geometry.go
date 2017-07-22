@@ -38,6 +38,28 @@ func (p Polygon) InteriorRings() []geom.Polygon {
 	return p.interior
 }
 
+func (p Polygon) ContainsCoord(c geom.Coord) bool {
+
+	ext := p.ExteriorRing()
+
+	contains := false
+
+	if ext.ContainsCoord(c) {
+
+		contains = true
+
+		for _, int := range p.InteriorRings() {
+
+			if int.ContainsCoord(c) {
+				contains = false
+				break
+			}
+		}
+	}
+
+	return contains
+}
+
 func ContainsCoord(f geojson.Feature, c geom.Coord) (bool, error) {
 
 	polys, err := Polygons(f)
