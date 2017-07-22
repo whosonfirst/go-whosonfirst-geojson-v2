@@ -10,7 +10,7 @@ import (
 
 func ToString(f geojson.Feature) (string, error) {
 
-	geom := gjson.GetBytes(f.ToBytes(), "geometry")
+	geom := gjson.GetBytes(f.Bytes(), "geometry")
 
 	if !geom.Exists() {
 		return "", errors.New("Missing geometry property")
@@ -31,5 +31,5 @@ func Type(f geojson.Feature) string {
 		"geometry.type",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "unknown")
+	return utils.StringProperty(f.Bytes(), possible, "unknown")
 }

@@ -46,13 +46,13 @@ func (p Polygon) ContainsCoord(c geom.Coord) bool {
 
 func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
 
-	t := gjson.GetBytes(f.ToBytes(), "geometry.type")
+	t := gjson.GetBytes(f.Bytes(), "geometry.type")
 
 	if !t.Exists() {
 		return nil, errors.New("Failed to determine geometry.type")
 	}
 
-	c := gjson.GetBytes(f.ToBytes(), "geometry.coordinates")
+	c := gjson.GetBytes(f.Bytes(), "geometry.coordinates")
 
 	if !c.Exists() {
 		return nil, errors.New("Failed to determine geometry.coordinates")

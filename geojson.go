@@ -8,8 +8,8 @@ type Feature interface {
 	Id() string
 	Name() string
 	Placetype() string
-	ToString() string
-	ToBytes() []byte
+	String() string
+	Bytes() []byte
 	BoundingBoxes() (BoundingBoxes, error)
 	Polygons() ([]Polygon, error)
 	// SPR() (spr.StandardPlaceResponse, error)

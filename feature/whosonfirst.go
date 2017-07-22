@@ -43,7 +43,7 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 	return &f, nil
 }
 
-func (f *WOFFeature) ToString() string {
+func (f *WOFFeature) String() string {
 
 	body, err := json.Marshal(f.body)
 
@@ -54,7 +54,7 @@ func (f *WOFFeature) ToString() string {
 	return string(body)
 }
 
-func (f *WOFFeature) ToBytes() []byte {
+func (f *WOFFeature) Bytes() []byte {
 	return f.body
 }
 

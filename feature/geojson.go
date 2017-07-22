@@ -34,7 +34,7 @@ func (f *GeoJSONFeature) ContainsCoord(c geom.Coord) (bool, error) {
 	return geometry.FeatureContainsCoord(f, c)
 }
 
-func (f *GeoJSONFeature) ToString() string {
+func (f *GeoJSONFeature) String() string {
 
 	body, err := json.Marshal(f.body)
 
@@ -45,7 +45,7 @@ func (f *GeoJSONFeature) ToString() string {
 	return string(body)
 }
 
-func (f *GeoJSONFeature) ToBytes() []byte {
+func (f *GeoJSONFeature) Bytes() []byte {
 
 	return f.body
 }
@@ -57,7 +57,7 @@ func (f *GeoJSONFeature) Id() string {
 		"properties.id",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "")
+	return utils.StringProperty(f.Bytes(), possible, "")
 }
 
 func (f *GeoJSONFeature) Name() string {
@@ -66,7 +66,7 @@ func (f *GeoJSONFeature) Name() string {
 		"properties.name",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "")
+	return utils.StringProperty(f.Bytes(), possible, "")
 }
 
 func (f *GeoJSONFeature) Placetype() string {
@@ -75,7 +75,7 @@ func (f *GeoJSONFeature) Placetype() string {
 		"properties.placetype",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "")
+	return utils.StringProperty(f.Bytes(), possible, "")
 }
 
 func (f *GeoJSONFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {

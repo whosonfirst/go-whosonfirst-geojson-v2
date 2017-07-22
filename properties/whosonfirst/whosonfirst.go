@@ -11,15 +11,15 @@ func Centroid(f geojson.Feature) (float64, float64) {
 	var lat gjson.Result
 	var lon gjson.Result
 
-	lat = gjson.GetBytes(f.ToBytes(), "properties.lbl:latitude")
-	lon = gjson.GetBytes(f.ToBytes(), "properties.lbl:longitude")
+	lat = gjson.GetBytes(f.Bytes(), "properties.lbl:latitude")
+	lon = gjson.GetBytes(f.Bytes(), "properties.lbl:longitude")
 
 	if lat.Exists() && lon.Exists() {
 		return lat.Float(), lon.Float()
 	}
 
-	lat = gjson.GetBytes(f.ToBytes(), "properties.geom:latitude")
-	lon = gjson.GetBytes(f.ToBytes(), "properties.geom:longitude")
+	lat = gjson.GetBytes(f.Bytes(), "properties.geom:latitude")
+	lon = gjson.GetBytes(f.Bytes(), "properties.geom:longitude")
 
 	if lat.Exists() && lon.Exists() {
 		return lat.Float(), lon.Float()
@@ -34,7 +34,7 @@ func Country(f geojson.Feature) string {
 		"properties.wof:country",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "XX")
+	return utils.StringProperty(f.Bytes(), possible, "XX")
 }
 
 func Id(f geojson.Feature) int64 {
@@ -44,7 +44,7 @@ func Id(f geojson.Feature) int64 {
 		"id",
 	}
 
-	return utils.Int64Property(f.ToBytes(), possible, -1)
+	return utils.Int64Property(f.Bytes(), possible, -1)
 }
 
 func Name(f geojson.Feature) string {
@@ -54,7 +54,7 @@ func Name(f geojson.Feature) string {
 		"properties.name",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "a place with no name")
+	return utils.StringProperty(f.Bytes(), possible, "a place with no name")
 }
 
 func ParentId(f geojson.Feature) int64 {
@@ -63,7 +63,7 @@ func ParentId(f geojson.Feature) int64 {
 		"properties.wof:parent_id",
 	}
 
-	return utils.Int64Property(f.ToBytes(), possible, -1)
+	return utils.Int64Property(f.Bytes(), possible, -1)
 }
 
 func Placetype(f geojson.Feature) string {
@@ -73,7 +73,7 @@ func Placetype(f geojson.Feature) string {
 		"properties.placetype",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "here be dragons")
+	return utils.StringProperty(f.Bytes(), possible, "here be dragons")
 }
 
 func Repo(f geojson.Feature) string {
@@ -82,7 +82,7 @@ func Repo(f geojson.Feature) string {
 		"properties.wof:repo",
 	}
 
-	return utils.StringProperty(f.ToBytes(), possible, "whosonfirst-data-xx")
+	return utils.StringProperty(f.Bytes(), possible, "whosonfirst-data-xx")
 }
 
 func IsCurrent(f geojson.Feature) (bool, bool) {
@@ -91,7 +91,7 @@ func IsCurrent(f geojson.Feature) (bool, bool) {
 		"properties.mz_iscurrent",
 	}
 
-	v := utils.Int64Property(f.ToBytes(), possible, -1)
+	v := utils.Int64Property(f.Bytes(), possible, -1)
 
 	if v == 1 {
 		return true, true
@@ -118,7 +118,7 @@ func IsDeprecated(f geojson.Feature) bool {
 		"properties.edtf:deprecated",
 	}
 
-	v := utils.StringProperty(f.ToBytes(), possible, "uuuu")
+	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
 
 	if v != "" && v != "u" && v != "uuuu" {
 		return true
@@ -133,13 +133,13 @@ func IsSuperseded(f geojson.Feature) bool {
 		"properties.edtf:superseded",
 	}
 
-	v := utils.StringProperty(f.ToBytes(), possible, "uuuu")
+	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
 
 	if v != "" && v != "u" && v != "uuuu" {
 		return true
 	}
 
-	by := gjson.GetBytes(f.ToBytes(), "properties.wof:superseded_by")
+	by := gjson.GetBytes(f.Bytes(), "properties.wof:superseded_by")
 
 	if by.Exists() && len(by.Array()) > 0 {
 		return true
@@ -152,7 +152,7 @@ func Hierarchy(f geojson.Feature) []map[string]int64 {
 
 	hierarchies := make([]map[string]int64, 0)
 
-	possible := gjson.GetBytes(f.ToBytes(), "properties.wof:hierarchy")
+	possible := gjson.GetBytes(f.Bytes(), "properties.wof:hierarchy")
 
 	if possible.Exists() {
 
