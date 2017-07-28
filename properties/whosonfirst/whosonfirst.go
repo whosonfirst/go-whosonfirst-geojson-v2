@@ -105,6 +105,10 @@ func IsCurrent(f geojson.Feature) (bool, bool) {
 		return true, false
 	}
 
+	if IsCeased(f) {
+		return true, false
+	}
+
 	if IsSuperseded(f) {
 		return true, false
 	}
@@ -116,6 +120,21 @@ func IsDeprecated(f geojson.Feature) bool {
 
 	possible := []string{
 		"properties.edtf:deprecated",
+	}
+
+	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
+
+	if v != "" && v != "u" && v != "uuuu" {
+		return true
+	}
+
+	return false
+}
+
+func IsCeased(f geojson.Feature) bool {
+
+	possible := []string{
+		"properties.edtf:cessation",
 	}
 
 	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
