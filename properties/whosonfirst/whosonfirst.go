@@ -167,6 +167,49 @@ func IsSuperseded(f geojson.Feature) bool {
 	return false
 }
 
+func IsSuperseding(f geojson.Feature) bool {
+
+	sc := gjson.GetBytes(f.Bytes(), "properties.wof:supersedes")
+
+	if sc.Exists() && len(sc.Array()) > 0 {
+		return true
+	}
+
+	return false
+}
+
+func SupersededBy(f geojson.Feature) []int64 {
+
+     superseded_by := make([]int64, 0)
+
+     possible := gjson.GetBytes(f.Bytes(), "properties.wof:superseded_by")
+
+     if possible.Exists(){
+
+     	for _, id := range possible.Array(){
+	    superseded_by = append(superseded_by, id.Int())
+	}
+     }
+
+     return superseded_by
+}
+
+func Supersedes(f geojson.Feature) []int64 {
+
+     supersedes := make([]int64, 0)
+
+     possible := gjson.GetBytes(f.Bytes(), "properties.wof:supersedes")
+
+     if possible.Exists(){
+
+     	for _, id := range possible.Array(){
+	    supersedes = append(supersedes, id.Int())
+	}
+     }
+
+     return supersedes
+}
+
 func Hierarchy(f geojson.Feature) []map[string]int64 {
 
 	hierarchies := make([]map[string]int64, 0)
