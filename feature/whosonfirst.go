@@ -15,6 +15,17 @@ type WOFFeature struct {
 	body []byte
 }
 
+func EnsureWOFFeature(body []byte) error {
+
+	required := []string{
+		"properties.wof:id",
+		"properties.wof:name",
+		"properties.wof:placetype",
+	}
+
+	return utils.EnsureProperties(body, required)
+}
+
 func NewWOFFeature(body []byte) (geojson.Feature, error) {
 
 	var stub interface{}
@@ -24,13 +35,7 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 		return nil, err
 	}
 
-	required := []string{
-		"properties.wof:id",
-		"properties.wof:name",
-		"properties.wof:placetype",
-	}
-
-	err = utils.EnsureProperties(body, required)
+	err = EnsureWOFFeature(body)
 
 	if err != nil {
 		return nil, err
