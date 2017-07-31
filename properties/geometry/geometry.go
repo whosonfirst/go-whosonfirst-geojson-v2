@@ -16,7 +16,7 @@ func ToString(f geojson.Feature) (string, error) {
 		return "", errors.New("Missing geometry property")
 	}
 
-	body, err := json.Marshal(geom)
+	body, err := json.Marshal(geom.Raw)
 
 	if err != nil {
 		return "", errors.New("Failed to serialize geometry property")
