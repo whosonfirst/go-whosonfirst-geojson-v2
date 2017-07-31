@@ -98,20 +98,22 @@ func IsCurrent(f geojson.Feature) (bool, bool) {
 	}
 
 	if v == 0 {
-		return true, false
+		return false, true
 	}
 
 	if IsDeprecated(f) {
-		return true, false
+		return false, true
 	}
 
 	if IsCeased(f) {
-		return true, false
+		return false, true
 	}
 
 	if IsSuperseded(f) {
-		return true, false
+		return false, true
 	}
+
+	// as in -1
 
 	return false, false
 }
