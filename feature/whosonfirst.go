@@ -2,11 +2,13 @@ package feature
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
+	"github.com/whosonfirst/go-whosonfirst-placetypes"
 	"strconv"
 )
 
@@ -20,10 +22,25 @@ func EnsureWOFFeature(body []byte) error {
 	required := []string{
 		"properties.wof:id",
 		"properties.wof:name",
+		"properties.wof:repo",
 		"properties.wof:placetype",
 	}
 
-	return utils.EnsureProperties(body, required)
+	err := utils.EnsureProperties(body, required)
+
+	if err != nil {
+		return err
+	}
+
+	pt := utils.StringProperty(body, []string{"properties.wof:placetype"}, "")
+
+	if !placetypes.IsValidPlacetype(pt){
+		return errors.New("Invalid wof:placetype")
+	}
+
+	// check wof:repo here?
+
+	return nil
 }
 
 func NewWOFFeature(body []byte) (geojson.Feature, error) {
