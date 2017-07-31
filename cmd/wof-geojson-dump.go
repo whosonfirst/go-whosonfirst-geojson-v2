@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/feature"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"log"
@@ -48,6 +49,14 @@ func main() {
 		}
 
 		fmt.Printf("WOF repo is %s\n", whosonfirst.Repo(wof))
+
+		str_geom, err := geometry.ToString(wof)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(str_geom)
 	}
 
 }
