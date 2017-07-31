@@ -1,7 +1,6 @@
 package geometry
 
 import (
-	"encoding/json"
 	"errors"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
@@ -16,13 +15,7 @@ func ToString(f geojson.Feature) (string, error) {
 		return "", errors.New("Missing geometry property")
 	}
 
-	body, err := json.Marshal(geom.Raw)
-
-	if err != nil {
-		return "", errors.New("Failed to serialize geometry property")
-	}
-
-	return string(body), nil
+	return geom.Raw, nil
 }
 
 func Type(f geojson.Feature) string {
