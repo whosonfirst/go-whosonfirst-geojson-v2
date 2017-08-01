@@ -21,6 +21,13 @@ type BoundingBoxes interface {
 	MBR() geom.Rect
 }
 
+type Centroid interface {
+	// Latitude() float64
+	// Longitude() float64
+	Coord() geom.Coord
+	Label() string
+}
+
 type Polygon interface {
 	ExteriorRing() geom.Polygon
 	InteriorRings() []geom.Polygon

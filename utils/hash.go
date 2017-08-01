@@ -30,19 +30,19 @@ func HashFeature(f geojson.Feature) (string, error) {
 
 	/*
 
-	        e, err := export.ExportFeature(f.Bytes())
+		        e, err := export.ExportFeature(f.Bytes())
 
-		if err != nil {
-			return "", err
-		}
+			if err != nil {
+				return "", err
+			}
 
-		h, err := hash.NewWOFHash()
+			h, err := hash.NewWOFHash()
 
-		if err != nil {
-			return "", err
-		}
+			if err != nil {
+				return "", err
+			}
 
-		return h.HashFromJSON(e)
+			return h.HashFromJSON(e)
 
 	*/
 }

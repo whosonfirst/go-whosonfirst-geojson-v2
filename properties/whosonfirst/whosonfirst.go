@@ -1,12 +1,43 @@
 package whosonfirst
 
 import (
+	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 )
 
-func Centroid(f geojson.Feature) (float64, float64) {
+type WOFCentroid struct {
+	geojson.Centroid
+	coord geom.Coord
+	label string
+}
+
+func (c *WOFCentroid) Coord() geom.Coord {
+	return c.coord
+}
+
+func (c *WOFCentroid) Label() string {
+	return c.label
+}
+
+func NewWOFCentroid(lat float64, lon float64, label string) (geojson.Centroid, error) {
+
+	coord, err := utils.NewCoordinateFromLatLons(lat, lon)
+
+	if err != nil {
+		return nil, err
+	}
+
+	c := WOFCentroid{
+		coord: coord,
+		label: label,
+	}
+
+	return &c, nil
+}
+
+func Centroid(f geojson.Feature) (geojson.Centroid, error) {
 
 	var lat gjson.Result
 	var lon gjson.Result
@@ -15,17 +46,24 @@ func Centroid(f geojson.Feature) (float64, float64) {
 	lon = gjson.GetBytes(f.Bytes(), "properties.lbl:longitude")
 
 	if lat.Exists() && lon.Exists() {
-		return lat.Float(), lon.Float()
+		return NewWOFCentroid(lat.Float(), lon.Float(), "lbl")
+	}
+
+	lat = gjson.GetBytes(f.Bytes(), "properties.reversegeo:latitude")
+	lon = gjson.GetBytes(f.Bytes(), "properties.reversegeo:longitude")
+
+	if lat.Exists() && lon.Exists() {
+		return NewWOFCentroid(lat.Float(), lon.Float(), "reversegeo")
 	}
 
 	lat = gjson.GetBytes(f.Bytes(), "properties.geom:latitude")
 	lon = gjson.GetBytes(f.Bytes(), "properties.geom:longitude")
 
 	if lat.Exists() && lon.Exists() {
-		return lat.Float(), lon.Float()
+		return NewWOFCentroid(lat.Float(), lon.Float(), "geom")
 	}
 
-	return 0.0, 0.0
+	return NewWOFCentroid(0.0, 0.0, "nullisland")
 }
 
 func Country(f geojson.Feature) string {
