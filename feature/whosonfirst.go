@@ -34,7 +34,7 @@ func EnsureWOFFeature(body []byte) error {
 
 	pt := utils.StringProperty(body, []string{"properties.wof:placetype"}, "")
 
-	if !placetypes.IsValidPlacetype(pt){
+	if !placetypes.IsValidPlacetype(pt) {
 		return errors.New("Invalid wof:placetype")
 	}
 
