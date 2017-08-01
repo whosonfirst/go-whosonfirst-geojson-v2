@@ -40,10 +40,10 @@ func main() {
 		feature_hash, err := utils.HashFeature(f)
 
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("failed to generate feature hash because %s\n", err)
+		} else {
+			fmt.Printf("feature hash is %s\n", feature_hash)
 		}
-
-		fmt.Printf("feature hash is %s\n", feature_hash)
 
 		str_geom, err := geometry.ToString(f)
 
