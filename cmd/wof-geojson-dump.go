@@ -51,11 +51,11 @@ func main() {
 
 		fmt.Printf("WOF repo is %s\n", whosonfirst.Repo(wof))
 
-			str_geom, err := geometry.ToString(wof)
+		str_geom, err := geometry.ToString(wof)
 
-			if err != nil {
-				log.Fatal(err)
-			}
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		if *show_geom {
 			fmt.Println(str_geom)
