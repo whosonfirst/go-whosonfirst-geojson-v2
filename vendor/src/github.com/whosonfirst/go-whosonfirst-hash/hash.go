@@ -8,18 +8,8 @@ import (
 	"io/ioutil"
 )
 
-// type Hash interface {
-//     HashFile(string) (string, error)
-//     HashBytes([]byte) (string, error)
-//     HashFromJSON([]byte) (string, error)
-// }
-
 type Hash struct {
 	algo string
-}
-
-func DefaultHash() (*Hash, error) {
-	return NewHash("md5")
 }
 
 func NewHash(algo string) (*Hash, error) {
@@ -52,21 +42,25 @@ func (h *Hash) HashFile(path string) (string, error) {
 
 func (h *Hash) HashFromJSON(raw []byte) (string, error) {
 
-	var geom interface{}
+	var stub interface{}
 
-	err := json.Unmarshal(raw, &geom)
+	err := json.Unmarshal(raw, &stub)
 
 	if err != nil {
 		return "", err
 	}
 
-	body, err := json.Marshal(geom)
+	body, err := json.Marshal(stub)
 
 	if err != nil {
 		return "", err
 	}
 
 	return h.HashBytes(body)
+}
+
+func (h *Hash) HashString(body string) (string, error) {
+	return h.HashBytes([]byte(body))
 }
 
 func (h *Hash) HashBytes(body []byte) (string, error) {

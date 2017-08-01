@@ -10,7 +10,8 @@ func main() {
 
 	flag.Parse()
 
-	h, err := hash.DefaultHash()
+	algo := "md5"
+	h, err := hash.NewHash(algo)
 
 	if err != nil {
 		log.Fatal(err)
