@@ -13,7 +13,6 @@ import (
 func main() {
 
 	show_geom := flag.Bool("geom", false, "...")
-	show_hash := flag.Bool("hash", false, "...")
 
 	flag.Parse()
 	args := flag.Args()
@@ -59,25 +58,6 @@ func main() {
 
 		if *show_geom {
 			fmt.Println(str_geom)
-		}
-
-		if *show_hash {
-
-			feature_hash, err := utils.HashFeature(wof)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			fmt.Printf("feature hash is %s\n", feature_hash)
-
-			geom_hash, err := utils.HashGeometry([]byte(str_geom))
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			fmt.Printf("geometry hash is %s\n", geom_hash)
 		}
 	}
 

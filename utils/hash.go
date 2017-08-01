@@ -1,16 +1,14 @@
 package utils
 
 import (
-        "errors"
+	"errors"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-hash"
 )
 
-const hash_algo = "md5"
-
 func HashFeature(f geojson.Feature) (string, error) {
 
-        return "", errors.New("This is not ready to use yet")
+	return "", errors.New("This is not ready to use yet")
 
 	// what we want is for the output of (b) to be the same as (a)
 	// (20170801/thisisaaronland)
@@ -18,33 +16,33 @@ func HashFeature(f geojson.Feature) (string, error) {
 	// hashing the file (a)
 
 	/*
-	h, err := hash.NewHash("md5")
+		h, err := hash.NewWOFHash()
 
-	if err != nil {
-		log.Fatal(err)
-	}
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	file_hash, err := h.HashFile(path)
+		file_hash, err := h.HashFile(path)
 	*/
 
 	// hashing the feature (b)
 	// github.com/whosonfirst/go-whosonfirst-export
-     		   
+
 	/*
 
-        e, err := export.ExportFeature(f.Bytes())
+	        e, err := export.ExportFeature(f.Bytes())
 
-	if err != nil {
-		return "", err
-	}
+		if err != nil {
+			return "", err
+		}
 
-	h, err := hash.NewHash(hash_algo)
+		h, err := hash.NewWOFHash()
 
-	if err != nil {
-		return "", err
-	}
+		if err != nil {
+			return "", err
+		}
 
-	return h.HashFromJSON(e)
+		return h.HashFromJSON(e)
 
 	*/
 }
@@ -57,7 +55,7 @@ func HashFeature(f geojson.Feature) (string, error) {
 
 func HashGeometry(geom []byte) (string, error) {
 
-	h, err := hash.NewHash(hash_algo)
+	h, err := hash.NewWOFHash()
 
 	if err != nil {
 		return "", err

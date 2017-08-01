@@ -23,7 +23,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		h, err := hash.NewHash("md5")
+		h, err := hash.NewWOFHash()
 
 		if err != nil {
 			log.Fatal(err)

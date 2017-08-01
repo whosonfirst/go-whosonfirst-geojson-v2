@@ -12,6 +12,10 @@ type Hash struct {
 	algo string
 }
 
+func NewWOFHash() (*Hash, error) {
+     return NewHash("md5")
+}
+
 func NewHash(algo string) (*Hash, error) {
 
 	switch algo {
