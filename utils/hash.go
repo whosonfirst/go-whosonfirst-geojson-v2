@@ -1,8 +1,8 @@
 package utils
 
 import (
-       	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
-       	// "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
+	// "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
 	"github.com/whosonfirst/go-whosonfirst-hash"
 )
 

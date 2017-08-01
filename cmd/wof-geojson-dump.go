@@ -12,6 +12,9 @@ import (
 
 func main() {
 
+	show_geom := flag.Bool("geom", false, "...")
+	show_hash := flag.Bool("hash", false, "...")
+
 	flag.Parse()
 	args := flag.Args()
 
@@ -29,8 +32,6 @@ func main() {
 		fmt.Printf("WOF ID is %d\n", whosonfirst.Id(f))
 		fmt.Printf("Name is %s\n", f.Name())
 		fmt.Printf("Placetype is %s\n", f.Placetype())
-
-		// fmt.Printf("Hierarchy is %s\n", f.Hierarchy())
 
 		coord, _ := utils.NewCoordinateFromLatLons(0.0, 0.0)
 		contains, _ := f.ContainsCoord(coord)
@@ -50,13 +51,34 @@ func main() {
 
 		fmt.Printf("WOF repo is %s\n", whosonfirst.Repo(wof))
 
-		str_geom, err := geometry.ToString(wof)
+			str_geom, err := geometry.ToString(wof)
 
-		if err != nil {
-			log.Fatal(err)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+		if *show_geom {
+			fmt.Println(str_geom)
 		}
 
-		fmt.Println(str_geom)
+		if *show_hash {
+
+			feature_hash, err := utils.HashFeature(wof)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Printf("feature hash is %s\n", feature_hash)
+
+			geom_hash, err := utils.HashGeometry([]byte(str_geom))
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Printf("geometry hash is %s\n", geom_hash)
+		}
 	}
 
 }
