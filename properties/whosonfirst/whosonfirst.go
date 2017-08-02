@@ -126,7 +126,7 @@ func Repo(f geojson.Feature) string {
 func IsCurrent(f geojson.Feature) (bool, bool) {
 
 	possible := []string{
-		"properties.mz_iscurrent",
+		"properties.mz:is_current",
 	}
 
 	v := utils.Int64Property(f.Bytes(), possible, -1)
