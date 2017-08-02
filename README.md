@@ -51,6 +51,15 @@ type BoundingBoxes interface {
 }
 ```
 
+### geojson.Centroid
+
+```
+type Centroid interface {
+	Coord() geom.Coord
+	Source() string
+}
+```
+
 ### geojson.Polygon
 
 ```

@@ -10,18 +10,18 @@ import (
 type WOFCentroid struct {
 	geojson.Centroid
 	coord geom.Coord
-	label string
+	source string
 }
 
 func (c *WOFCentroid) Coord() geom.Coord {
 	return c.coord
 }
 
-func (c *WOFCentroid) Label() string {
-	return c.label
+func (c *WOFCentroid) Source() string {
+	return c.source
 }
 
-func NewWOFCentroid(lat float64, lon float64, label string) (geojson.Centroid, error) {
+func NewWOFCentroid(lat float64, lon float64, source string) (geojson.Centroid, error) {
 
 	coord, err := utils.NewCoordinateFromLatLons(lat, lon)
 
@@ -31,7 +31,7 @@ func NewWOFCentroid(lat float64, lon float64, label string) (geojson.Centroid, e
 
 	c := WOFCentroid{
 		coord: coord,
-		label: label,
+		source: source,
 	}
 
 	return &c, nil
