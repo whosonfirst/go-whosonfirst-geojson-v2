@@ -2,6 +2,7 @@ package hash
 
 import (
 	"crypto/md5"
+	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -20,7 +21,13 @@ func NewHash(algo string) (*Hash, error) {
 
 	switch algo {
 
+	// this is really dumb - see if there is some way to let crypto.Hash
+	// figure out what is availble... and import it?
+	// (20170802/thisisaaronland)
+
 	case "md5":
+		// pass
+	case "sha1":
 		// pass
 	default:
 		return nil, errors.New("Unsupported hashing algorithm")
@@ -69,16 +76,22 @@ func (h *Hash) HashString(body string) (string, error) {
 
 func (h *Hash) HashBytes(body []byte) (string, error) {
 
-	var hash [16]byte
+     	var str string
 
 	switch h.algo {
 
+	// this is still dumb - see notes above
+	// (20170802/thisisaaronland)
+
 	case "md5":
-		hash = md5.Sum(body)
+		hash := md5.Sum(body)
+		str = hex.EncodeToString(hash[:])
+	case "sha1":
+		hash := sha1.Sum(body)
+		str = hex.EncodeToString(hash[:])
 	default:
 		return "", errors.New("How did we even get this far")
 	}
 
-	hex := hex.EncodeToString(hash[:])
-	return hex, nil
+	return str, nil
 }

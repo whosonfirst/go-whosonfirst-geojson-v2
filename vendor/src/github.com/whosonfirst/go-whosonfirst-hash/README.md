@@ -12,4 +12,6 @@ make bin
 
 All of this package's dependencies are bundled with the code in the `vendor` directory.
 
+## Important
 
+This is almost certainly not a general purpose package. It is shaped like the day-to-day needs of Who's On First in mid-2017...

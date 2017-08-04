@@ -9,7 +9,7 @@ import (
 
 type WOFCentroid struct {
 	geojson.Centroid
-	coord geom.Coord
+	coord  geom.Coord
 	source string
 }
 
@@ -30,7 +30,7 @@ func NewWOFCentroid(lat float64, lon float64, source string) (geojson.Centroid, 
 	}
 
 	c := WOFCentroid{
-		coord: coord,
+		coord:  coord,
 		source: source,
 	}
 

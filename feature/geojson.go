@@ -2,10 +2,12 @@ package feature
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
+	"github.com/whosonfirst/go-whosonfirst-spr"
 )
 
 type GeoJSONFeature struct {
@@ -84,4 +86,8 @@ func (f *GeoJSONFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
 
 func (f *GeoJSONFeature) Polygons() ([]geojson.Polygon, error) {
 	return geometry.PolygonsForFeature(f)
+}
+
+func (f *GeoJSONFeature) SPR() (spr.StandardPlacesResult, error) {
+	return nil, errors.New("SPR is not implemented yet.")
 }
