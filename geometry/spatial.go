@@ -13,6 +13,11 @@ func FeatureContainsCoord(f geojson.Feature, c geom.Coord) (bool, error) {
 		return false, err
 	}
 
+	return PolygonsContainsCoord(polys, c)
+}
+
+func PolygonsContainsCoord(polys []geojson.Polygon, c geom.Coord) (bool, error) {
+
 	contains := false
 
 	for _, p := range polys {
