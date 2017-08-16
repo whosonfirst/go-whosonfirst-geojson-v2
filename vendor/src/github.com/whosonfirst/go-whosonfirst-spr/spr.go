@@ -13,11 +13,11 @@ type StandardPlacesResult interface {
 	Repo() string
 	Path() string
 	URI() string
-	IsCurrent() flags.ExistentialFlag
-	IsCeased() flags.ExistentialFlag
-	IsDeprecated() flags.ExistentialFlag
-	IsSuperseded() flags.ExistentialFlag
-	IsSuperseding() flags.ExistentialFlag
+	IsCurrent() (flags.ExistentialFlag, error)
+	IsCeased() (flags.ExistentialFlag, error)
+	IsDeprecated() (flags.ExistentialFlag, error)
+	IsSuperseded() (flags.ExistentialFlag, error)
+	IsSuperseding() (flags.ExistentialFlag, error)
 	SupersededBy() []int64
 	Supersedes() []int64
 }
