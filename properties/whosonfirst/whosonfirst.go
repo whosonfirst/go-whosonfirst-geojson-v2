@@ -164,10 +164,10 @@ func IsDeprecated(f geojson.Feature) flags.ExistentialFlag {
 		"properties.edtf:deprecated",
 	}
 
-	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
+	v := utils.StringProperty(f.Bytes(), possible, "-")
 
 	switch v {
-	case "":
+	case "-":
 		return existential.NewKnownUnknownFlag(0)
 	case "u":
 		return existential.NewKnownUnknownFlag(-1)
