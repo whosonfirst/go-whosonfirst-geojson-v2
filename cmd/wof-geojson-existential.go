@@ -24,27 +24,27 @@ func main() {
 		is_current := whosonfirst.IsCurrent(f)
 		is_current_raw := utils.StringProperty(f.Bytes(), []string{"properties.mz:is_current"}, "")
 
-		log.Printf("is current:%t certainty: %v raw:%s\n", is_current, is_current_raw)
+		log.Printf("is current: %s raw:%s\n", is_current, is_current_raw)
 
 		is_deprecated := whosonfirst.IsDeprecated(f)
 		is_deprecated_raw := utils.StringProperty(f.Bytes(), []string{"properties.edtf:deprecated"}, "")
 
-		log.Printf("is deprecated:vt raw:%s\n", is_deprecated, is_deprecated_raw)
+		log.Printf("is deprecated:%s raw:%s\n", is_deprecated, is_deprecated_raw)
 
 		is_ceased := whosonfirst.IsCeased(f)
 		is_ceased_raw := utils.StringProperty(f.Bytes(), []string{"properties.edtf:cessation"}, "")
 
-		log.Printf("is ceased:%v raw:%s\n", is_ceased, is_ceased_raw)
+		log.Printf("is ceased:%s raw:%s\n", is_ceased, is_ceased_raw)
 
 		is_superseded := whosonfirst.IsSuperseded(f)
 		is_superseded_raw := utils.StringProperty(f.Bytes(), []string{"properties.wof:superseded_by"}, "")
 
-		log.Printf("is superseded:%v raw:%s\n", is_superseded, is_superseded_raw)
+		log.Printf("is superseded:%s raw:%s\n", is_superseded, is_superseded_raw)
 
 		is_superseding := whosonfirst.IsSuperseding(f)
 		is_superseding_raw := utils.StringProperty(f.Bytes(), []string{"properties.wof:supersedes"}, "")
 
-		log.Printf("is superseding:%v raw:%s\n", is_superseding, is_superseding_raw)
+		log.Printf("is superseding:%s raw:%s\n", is_superseding, is_superseding_raw)
 
 	}
 

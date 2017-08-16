@@ -1,6 +1,7 @@
 package existential
 
 import (
+	"fmt"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 )
 
@@ -51,4 +52,8 @@ func (f *KnownUnknownFlag) IsFalse() bool {
 
 func (f *KnownUnknownFlag) IsKnown() bool {
 	return f.confidence
+}
+
+func (f *KnownUnknownFlag) String() string {
+	return fmt.Sprintf("FLAG %d IS TRUE %t IS FALSE %t IS  KNOWN %t", f.flag, f.IsTrue(), f.IsFalse(), f.IsKnown())
 }
