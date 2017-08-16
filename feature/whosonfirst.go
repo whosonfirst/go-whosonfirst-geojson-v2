@@ -19,6 +19,30 @@ type WOFFeature struct {
 	body []byte
 }
 
+type WOFExistentialFlag struct {
+     spr.ExistentialFlag
+     WOFStatusInt int64
+     WOFStatus bool
+     WOFConfidence bool 
+     raw interface{}
+}
+
+func (f *WOFExistentialFlag) StatusInt() int64 {
+     return f.WOFStatusInt
+}
+
+func (f *WOFExistentialFlag) Status() bool {
+     return f.WOFStatus
+}
+
+func (f *WOFExistentialFlag) Confidence() bool {
+     return f.WOFConfidence
+}
+
+func (f *WOFExistentialFlag) String() string {
+     return fmt.Sprintf("%v", f.raw)
+}
+
 type WOFStandardPlacesResult struct {
 	spr.StandardPlacesResult `json:",omitempty"`
 	WOFId                    int64   `json:"wof:id"`
@@ -235,49 +259,29 @@ func (spr *WOFStandardPlacesResult) URI() string {
 	return spr.MZURI
 }
 
-func (spr *WOFStandardPlacesResult) IsCurrent() bool {
+func (spr *WOFStandardPlacesResult) IsCurrent() spr.ExistentialFlag {
 
-	if spr.MZIsCurrent == 1 {
-		return true
-	}
-
-	return false
+     return NewWOFExistentialFlag(spr.MZIsCurrent)
 }
 
 func (spr *WOFStandardPlacesResult) IsCeased() bool {
 
-	if spr.MZIsCeased == 1 {
-		return true
-	}
-
-	return false
+     return NewWOFExistentialFlag(spr.MZIsCeased)
 }
 
 func (spr *WOFStandardPlacesResult) IsDeprecated() bool {
 
-	if spr.MZIsDeprecated == 1 {
-		return true
-	}
-
-	return false
+     return NewWOFExistentialFlag(spr.MZIsDeprecated)
 }
 
 func (spr *WOFStandardPlacesResult) IsSuperseded() bool {
 
-	if spr.MZIsSuperseded == 1 {
-		return true
-	}
-
-	return false
+     return NewWOFExistentialFlag(spr.MZIsSuperseded)
 }
 
 func (spr *WOFStandardPlacesResult) IsSuperseding() bool {
 
-	if spr.MZIsSuperseding == 1 {
-		return true
-	}
-
-	return false
+     return NewWOFExistentialFlag(spr.MZIsSuperseding)
 }
 
 func (spr *WOFStandardPlacesResult) SupersededBy() []int64 {
@@ -286,4 +290,34 @@ func (spr *WOFStandardPlacesResult) SupersededBy() []int64 {
 
 func (spr *WOFStandardPlacesResult) Supersedes() []int64 {
 	return spr.WOFSupersedes
+}
+
+func NewWOFExistentialFlag(v int64) (*WOFExistentialFlag) {
+
+     	var status_int int64
+	var status bool
+	var confidence bool
+
+	switch v {
+	       case 0:
+	       	    status_int = v
+		    status = false
+		    confidence = true
+	       case 1:
+	       	    status_int = v
+		    status = true
+		    confidence = true
+	       default:
+	       	    status_int = v
+		    status = false
+		    confidence = false
+        }
+
+	flag := WOFExistentialFlag{
+	     WOFStatusInt: status_int,
+	     WOFStatus: status
+	     WOFConfidence: confidence,
+	}
+
+	return &flag
 }

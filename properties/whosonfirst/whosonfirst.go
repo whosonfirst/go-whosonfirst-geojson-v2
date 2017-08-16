@@ -132,28 +132,32 @@ func IsCurrent(f geojson.Feature) (bool, bool) {
 	v := utils.Int64Property(f.Bytes(), possible, -1)
 
 	if v == 1 {
-		return true, true
+		return NewExistentialFlag(v, true, true)
 	}
 
 	if v == 0 {
-		return false, true
+		return NewExistentialFlag(v, false, true)
 	}
 
-	if IsDeprecated(f) {
-		return false, true
+	d := IsDeprecated(f)
+
+	if d.True() && d.Confidence() {
+		return NewExistentialFlag(0, false, true)
 	}
 
-	if IsCeased(f) {
-		return false, true
+	c := IsCeased(f)
+
+	if c.Status() && c.Confidence() {
+		return NewExistentialFlag(0, false, true)
 	}
 
-	if IsSuperseded(f) {
-		return false, true
+	s := IsSuperseded(f)
+
+	if s.Status() && s.Confidence() {
+		return NewExistentialFlag(0, false, true)
 	}
 
-	// as in -1
-
-	return false, false
+	return NewExistentialFlag(-1, true, false)
 }
 
 func IsDeprecated(f geojson.Feature) bool {
@@ -164,11 +168,16 @@ func IsDeprecated(f geojson.Feature) bool {
 
 	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
 
-	if v != "" && v != "u" && v != "uuuu" {
-		return true
-	}
-
-	return false
+	switch v {
+	       case "":
+	       	    return NewExistentialFlag(0, false, true)
+	       case "u":
+	       	    return NewExistentialFlag(-1, false, false)
+	       case "u":
+	       	    return NewExistentialFlag(-1, false, false)
+	        default:
+	       	    return NewExistentialFlag(1, true, true)
+        }
 }
 
 func IsCeased(f geojson.Feature) bool {
@@ -179,11 +188,16 @@ func IsCeased(f geojson.Feature) bool {
 
 	v := utils.StringProperty(f.Bytes(), possible, "uuuu")
 
-	if v != "" && v != "u" && v != "uuuu" {
-		return true
-	}
-
-	return false
+	switch v {
+	       case "":
+	       	    return NewExistentialFlag(0, false, true)
+	       case "u":
+	       	    return NewExistentialFlag(-1, false, false)
+	       case "u":
+	       	    return NewExistentialFlag(-1, false, false)
+	        default:
+	       	    return NewExistentialFlag(1, true, true)
+        }
 }
 
 func IsSuperseded(f geojson.Feature) bool {
