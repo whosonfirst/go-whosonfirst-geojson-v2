@@ -134,28 +134,28 @@ func IsCurrent(f geojson.Feature) flags.ExistentialFlag {
 	v := utils.Int64Property(f.Bytes(), possible, -1)
 
 	if v == 1 || v == 0 {
-		return existential.NewKnownUnknownFlag(v)
+		return existentialFlag(v)
 	}
 
 	d := IsDeprecated(f)
 
 	if d.IsTrue() && d.IsKnown() {
-		return existential.NewKnownUnknownFlag(0)
+		return existentialFlag(0)
 	}
 
 	c := IsCeased(f)
 
 	if c.IsTrue() && c.IsKnown() {
-		return existential.NewKnownUnknownFlag(0)
+		return existentialFlag(0)
 	}
 
 	s := IsSuperseded(f)
 
 	if s.IsTrue() && s.IsKnown() {
-		return existential.NewKnownUnknownFlag(0)
+		return existentialFlag(0)
 	}
 
-	return existential.NewKnownUnknownFlag(-1)
+	return existentialFlag(-1)
 }
 
 func IsDeprecated(f geojson.Feature) flags.ExistentialFlag {
@@ -168,13 +168,13 @@ func IsDeprecated(f geojson.Feature) flags.ExistentialFlag {
 
 	switch v {
 	case "-":
-		return existential.NewKnownUnknownFlag(0)
+		return existentialFlag(0)
 	case "u":
-		return existential.NewKnownUnknownFlag(-1)
+		return existentialFlag(-1)
 	case "uuuu":
-		return existential.NewKnownUnknownFlag(-1)
+		return existentialFlag(-1)
 	default:
-		return existential.NewKnownUnknownFlag(1)
+		return existentialFlag(1)
 	}
 }
 
@@ -188,13 +188,13 @@ func IsCeased(f geojson.Feature) flags.ExistentialFlag {
 
 	switch v {
 	case "":
-		return existential.NewKnownUnknownFlag(0)
+		return existentialFlag(0)
 	case "u":
-		return existential.NewKnownUnknownFlag(-1)
+		return existentialFlag(-1)
 	case "uuuu":
-		return existential.NewKnownUnknownFlag(-1)
+		return existentialFlag(-1)
 	default:
-		return existential.NewKnownUnknownFlag(1)
+		return existentialFlag(1)
 	}
 }
 
@@ -203,10 +203,10 @@ func IsSuperseded(f geojson.Feature) flags.ExistentialFlag {
 	by := gjson.GetBytes(f.Bytes(), "properties.wof:superseded_by")
 
 	if by.Exists() && len(by.Array()) > 0 {
-		return existential.NewKnownUnknownFlag(1)
+		return existentialFlag(1)
 	}
 
-	return existential.NewKnownUnknownFlag(0)
+	return existentialFlag(0)
 }
 
 func IsSuperseding(f geojson.Feature) flags.ExistentialFlag {
@@ -214,10 +214,15 @@ func IsSuperseding(f geojson.Feature) flags.ExistentialFlag {
 	sc := gjson.GetBytes(f.Bytes(), "properties.wof:supersedes")
 
 	if sc.Exists() && len(sc.Array()) > 0 {
-		return existential.NewKnownUnknownFlag(1)
+		return existentialFlag(1)
 	}
 
-	return existential.NewKnownUnknownFlag(0)
+	return existentialFlag(0)
+}
+
+func existentialFlag(i int64) flags.ExistentialFlag {
+	fl, _ := existential.NewKnownUnknownFlag(i)
+	return fl
 }
 
 func SupersededBy(f geojson.Feature) []int64 {

@@ -212,23 +212,23 @@ func (spr *WOFStandardPlacesResult) URI() string {
 }
 
 func (spr *WOFStandardPlacesResult) IsCurrent() flags.ExistentialFlag {
-	return existential.NewKnownUnknownFlag(spr.MZIsCurrent)
+	return existentialFlag(spr.MZIsCurrent)
 }
 
 func (spr *WOFStandardPlacesResult) IsCeased() flags.ExistentialFlag {
-	return existential.NewKnownUnknownFlag(spr.MZIsCeased)
+	return existentialFlag(spr.MZIsCeased)
 }
 
 func (spr *WOFStandardPlacesResult) IsDeprecated() flags.ExistentialFlag {
-	return existential.NewKnownUnknownFlag(spr.MZIsDeprecated)
+	return existentialFlag(spr.MZIsDeprecated)
 }
 
 func (spr *WOFStandardPlacesResult) IsSuperseded() flags.ExistentialFlag {
-	return existential.NewKnownUnknownFlag(spr.MZIsSuperseded)
+	return existentialFlag(spr.MZIsSuperseded)
 }
 
 func (spr *WOFStandardPlacesResult) IsSuperseding() flags.ExistentialFlag {
-	return existential.NewKnownUnknownFlag(spr.MZIsSuperseding)
+	return existentialFlag(spr.MZIsSuperseding)
 }
 
 func (spr *WOFStandardPlacesResult) SupersededBy() []int64 {
@@ -237,4 +237,9 @@ func (spr *WOFStandardPlacesResult) SupersededBy() []int64 {
 
 func (spr *WOFStandardPlacesResult) Supersedes() []int64 {
 	return spr.WOFSupersedes
+}
+
+func existentialFlag(i int64) flags.ExistentialFlag {
+	fl, _ := existential.NewKnownUnknownFlag(i)
+	return fl
 }

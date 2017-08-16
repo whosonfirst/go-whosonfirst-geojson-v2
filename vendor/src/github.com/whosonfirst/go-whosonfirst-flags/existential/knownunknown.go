@@ -12,7 +12,7 @@ type KnownUnknownFlag struct {
 	confidence bool
 }
 
-func NewKnownUnknownFlag(i int64) flags.ExistentialFlag {
+func NewKnownUnknownFlag(i int64) (flags.ExistentialFlag, error) {
 
 	var status bool
 	var confidence bool
@@ -25,6 +25,7 @@ func NewKnownUnknownFlag(i int64) flags.ExistentialFlag {
 		status = true
 		confidence = true
 	default:
+		i = -1 // just in case someone passes us garbage
 		status = false
 		confidence = false
 	}
@@ -35,7 +36,7 @@ func NewKnownUnknownFlag(i int64) flags.ExistentialFlag {
 		confidence: confidence,
 	}
 
-	return &f
+	return &f, nil
 }
 
 func (f *KnownUnknownFlag) Flag() int64 {
@@ -52,6 +53,10 @@ func (f *KnownUnknownFlag) IsFalse() bool {
 
 func (f *KnownUnknownFlag) IsKnown() bool {
 	return f.confidence
+}
+
+func (f *KnownUnknownFlag) Matches(other flags.ExistentialFlag) bool {
+	return f.Flag() == other.Flag()
 }
 
 func (f *KnownUnknownFlag) String() string {
