@@ -215,6 +215,10 @@ func (spr *WOFStandardPlacesResult) Name() string {
 	return spr.WOFName
 }
 
+func (spr *WOFStandardPlacesResult) Placetype() string {
+	return spr.WOFPlacetype
+}
+
 func (spr *WOFStandardPlacesResult) Country() string {
 	return spr.WOFCountry
 }
