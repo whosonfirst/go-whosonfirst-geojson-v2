@@ -161,7 +161,7 @@ func Id2AbsPath(root string, id int64, args ...*URIArgs) (string, error) {
 
 func IsWOFFile(path string) (bool, error) {
 
-	re_woffile, err := regexp.Compile(`^\d+(?:\-alt\-.*)?\.geojson`)
+	re_woffile, err := regexp.Compile(`^\d+(?:\-alt\-.*)?\.geojson$`)
 
 	if err != nil {
 		return false, err
@@ -182,7 +182,7 @@ func IsWOFFile(path string) (bool, error) {
 
 func IsAltFile(path string) (bool, error) {
 
-	re_altfile, err := regexp.Compile(`^\d+\-alt\-.*\.geojson`)
+	re_altfile, err := regexp.Compile(`^\d+\-alt\-.*\.geojson$`)
 
 	if err != nil {
 		return false, err
@@ -221,7 +221,7 @@ func IdFromPath(path string) (int64, error) {
 
 	fname := filepath.Base(abs_path)
 
-	re_wofid, err := regexp.Compile(`^(\d+)(?:\-alt\-.*)?\.geojson`)
+	re_wofid, err := regexp.Compile(`^(\d+)(?:\-alt\-.*)?\.geojson$`)
 
 	if err != nil {
 		return -1, err

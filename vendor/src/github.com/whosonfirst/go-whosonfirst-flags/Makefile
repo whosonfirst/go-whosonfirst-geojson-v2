@@ -8,15 +8,16 @@ prep:
 
 self:   prep rmdeps
 	if test -d src; then rm -rf src; fi
-	mkdir -p src/github.com/whosonfirst/go-whosonfirst-spr/
-	cp *.go src/github.com/whosonfirst/go-whosonfirst-spr
+	mkdir -p src/github.com/whosonfirst/go-whosonfirst-flags/
+	mkdir -p src/github.com/whosonfirst/go-whosonfirst-flags/existential
+	cp *.go src/github.com/whosonfirst/go-whosonfirst-flags
+	cp existential/*.go src/github.com/whosonfirst/go-whosonfirst-flags/existential/
 	# cp -r vendor/src/* src/
 
 rmdeps:
 	if test -d src; then rm -rf src; fi 
 
 deps:   rmdeps
-	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-flags"
 
 vendor-deps: deps
 	if test ! -d vendor; then mkdir vendor; fi
@@ -28,5 +29,6 @@ vendor-deps: deps
 
 fmt:
 	go fmt *.go
+	go fmt existential/*.go
 
 bin:	self

@@ -1,10 +1,8 @@
 package spr
 
-type ExistentialFlag interface {
-     StatusInt() int64
-     Status() bool     		     
-     Confidence() bool
-}
+import (
+	"github.com/whosonfirst/go-whosonfirst-flags"
+)
 
 type StandardPlacesResult interface {
 	Id() int64
@@ -15,11 +13,11 @@ type StandardPlacesResult interface {
 	Repo() string
 	Path() string
 	URI() string
-	IsCurrent() ExistentialFlag
-	IsCeased() ExistentialFlag
-	IsDeprecated() ExistentialFlag
-	IsSuperseded() ExistentialFlag
-	IsSuperseding() ExsitentialFlag
+	IsCurrent() flags.ExistentialFlag
+	IsCeased() flags.ExistentialFlag
+	IsDeprecated() flags.ExistentialFlag
+	IsSuperseded() flags.ExistentialFlag
+	IsSuperseding() flags.ExistentialFlag
 	SupersededBy() []int64
 	Supersedes() []int64
 }
