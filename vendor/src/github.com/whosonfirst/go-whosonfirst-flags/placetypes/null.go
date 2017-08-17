@@ -14,8 +14,8 @@ func NewNullFlag() (*NullFlag, error) {
 	return &f, nil
 }
 
-func (f *NullFlag) Matches(other flags.PlacetypesFlag) bool {
-     	return true
+func (f *NullFlag) Matches(others ...flags.PlacetypesFlag) bool {
+	return true
 }
 
 func (f *NullFlag) Placetypes() []string {
