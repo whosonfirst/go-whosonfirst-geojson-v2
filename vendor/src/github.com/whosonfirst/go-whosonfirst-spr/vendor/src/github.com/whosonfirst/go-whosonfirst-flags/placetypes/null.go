@@ -22,8 +22,8 @@ func (f *NullFlag) MatchesAll(others ...flags.PlacetypeFlag) bool {
 	return true
 }
 
-func (f *NullFlag) Placetype() string {
-	return ""
+func (f *NullFlag) Placetype() []string {
+	return []string{}
 }
 
 func (f *NullFlag) String() string {

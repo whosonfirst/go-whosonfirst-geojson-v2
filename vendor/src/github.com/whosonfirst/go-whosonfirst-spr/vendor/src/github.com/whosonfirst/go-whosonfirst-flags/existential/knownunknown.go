@@ -1,6 +1,7 @@
 package existential
 
 import (
+	"fmt"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 )
 
@@ -11,7 +12,7 @@ type KnownUnknownFlag struct {
 	confidence bool
 }
 
-func NewKnownUnknownFlag(i int64) flags.ExistentialFlag {
+func NewKnownUnknownFlag(i int64) (flags.ExistentialFlag, error) {
 
 	var status bool
 	var confidence bool
@@ -24,6 +25,7 @@ func NewKnownUnknownFlag(i int64) flags.ExistentialFlag {
 		status = true
 		confidence = true
 	default:
+		i = -1 // just in case someone passes us garbage
 		status = false
 		confidence = false
 	}
@@ -34,7 +36,7 @@ func NewKnownUnknownFlag(i int64) flags.ExistentialFlag {
 		confidence: confidence,
 	}
 
-	return &f
+	return &f, nil
 }
 
 func (f *KnownUnknownFlag) Flag() int64 {
@@ -51,4 +53,36 @@ func (f *KnownUnknownFlag) IsFalse() bool {
 
 func (f *KnownUnknownFlag) IsKnown() bool {
 	return f.confidence
+}
+
+func (f *KnownUnknownFlag) MatchesAny(others ...flags.ExistentialFlag) bool {
+
+	for _, o := range others {
+		if f.Flag() == o.Flag() {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (f *KnownUnknownFlag) MatchesAll(others ...flags.ExistentialFlag) bool {
+
+	matches := 0
+
+	for _, o := range others {
+		if f.Flag() == o.Flag() {
+			matches += 1
+		}
+	}
+
+	if matches == len(others) {
+		return true
+	}
+
+	return false
+}
+
+func (f *KnownUnknownFlag) String() string {
+	return fmt.Sprintf("FLAG %d IS TRUE %t IS FALSE %t IS  KNOWN %t", f.flag, f.IsTrue(), f.IsFalse(), f.IsKnown())
 }

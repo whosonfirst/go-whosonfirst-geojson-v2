@@ -5,12 +5,14 @@ type ExistentialFlag interface {
 	IsTrue() bool
 	IsFalse() bool
 	IsKnown() bool
-	Matches(...ExistentialFlag) bool
+	MatchesAny(...ExistentialFlag) bool
+	MatchesAll(...ExistentialFlag) bool
 	String() string
 }
 
-type PlacetypesFlag interface {
-	Matches(...PlacetypesFlag) bool
-	Placetypes() []string
+type PlacetypeFlag interface {
+	MatchesAny(...PlacetypeFlag) bool
+	MatchesAll(...PlacetypeFlag) bool
+	Placetype() string
 	String() string
 }

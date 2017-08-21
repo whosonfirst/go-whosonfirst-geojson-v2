@@ -55,3 +55,4 @@ bin:	self
 	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-dump cmd/wof-geojson-dump.go
 	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-existential cmd/wof-geojson-existential.go
 	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-hash cmd/wof-geojson-hash.go
+	@GOPATH=$(GOPATH) go build -o bin/wof-geojson-intersects cmd/wof-geojson-intersects.go

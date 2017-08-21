@@ -55,12 +55,29 @@ func (f *KnownUnknownFlag) IsKnown() bool {
 	return f.confidence
 }
 
-func (f *KnownUnknownFlag) Matches(others ...flags.ExistentialFlag) bool {
+func (f *KnownUnknownFlag) MatchesAny(others ...flags.ExistentialFlag) bool {
 
 	for _, o := range others {
 		if f.Flag() == o.Flag() {
 			return true
 		}
+	}
+
+	return false
+}
+
+func (f *KnownUnknownFlag) MatchesAll(others ...flags.ExistentialFlag) bool {
+
+	matches := 0
+
+	for _, o := range others {
+		if f.Flag() == o.Flag() {
+			matches += 1
+		}
+	}
+
+	if matches == len(others) {
+		return true
 	}
 
 	return false
