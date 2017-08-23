@@ -5,6 +5,7 @@ import (
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
+	"io"
 	"io/ioutil"
 	"os"
 )
@@ -16,6 +17,22 @@ func LoadFeatureFromFile(path string) (geojson.Feature, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return loadFeatureFromBytes(body)
+}
+
+func LoadFeatureFromReader(fh io.Reader) (geojson.Feature, error) {
+
+	body, err := UnmarshalFeatureFromReader(fh)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return loadFeatureFromBytes(body)
+}
+
+func loadFeatureFromBytes(body []byte) (geojson.Feature, error) {
 
 	wofid := gjson.GetBytes(body, "properties.wof:id")
 
@@ -37,6 +54,17 @@ func LoadWOFFeatureFromFile(path string) (geojson.Feature, error) {
 	return NewWOFFeature(body)
 }
 
+func LoadWOFFeatureFromReader(fh io.Reader) (geojson.Feature, error) {
+
+	body, err := UnmarshalFeatureFromReader(fh)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return NewWOFFeature(body)
+}
+
 func UnmarshalFeatureFromFile(path string) ([]byte, error) {
 
 	fh, err := os.Open(path)
@@ -46,6 +74,11 @@ func UnmarshalFeatureFromFile(path string) ([]byte, error) {
 	}
 
 	defer fh.Close()
+
+	return UnmarshalFeatureFromReader(fh)
+}
+
+func UnmarshalFeatureFromReader(fh io.Reader) ([]byte, error) {
 
 	body, err := ioutil.ReadAll(fh)
 
