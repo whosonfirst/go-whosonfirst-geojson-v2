@@ -120,7 +120,7 @@ func gjson_coordsToPolygon(r gjson.Result) (geojson.Polygon, error) {
 	for i := 1; i <= count_interior; i++ {
 
 		poly, err := gjson_linearRingToGeomPolygon(rings[i])
-		
+
 		if err != nil {
 			return nil, err
 		}
