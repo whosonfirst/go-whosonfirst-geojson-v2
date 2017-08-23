@@ -23,10 +23,9 @@ type BoundingBoxes interface {
 }
 
 type Centroid interface {
-	// Latitude() float64
-	// Longitude() float64
 	Coord() geom.Coord
 	Source() string
+	ToString() (string, error)
 }
 
 type Polygon interface {
