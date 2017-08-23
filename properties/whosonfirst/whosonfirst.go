@@ -1,6 +1,7 @@
 package whosonfirst
 
 import (
+	"encoding/json"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-flags"
@@ -21,6 +22,27 @@ func (c *WOFCentroid) Coord() geom.Coord {
 
 func (c *WOFCentroid) Source() string {
 	return c.source
+}
+
+func (c *WOFCentroid) ToString() (string, error) {
+
+	type Geometry struct {
+		Type        string    `json:"type"`
+		Coordinates []float64 `json:"coordinates"`
+	}
+
+	g := Geometry{
+		Type:        "Point",
+		Coordinates: []float64{c.coord.X, c.coord.Y},
+	}
+
+	b, err := json.Marshal(g)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
 }
 
 func NewWOFCentroid(lat float64, lon float64, source string) (geojson.Centroid, error) {
