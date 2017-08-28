@@ -3,6 +3,7 @@ package existential
 import (
 	"fmt"
 	"github.com/whosonfirst/go-whosonfirst-flags"
+	"strconv"
 )
 
 type KnownUnknownFlag struct {
@@ -37,6 +38,10 @@ func NewKnownUnknownFlag(i int64) (flags.ExistentialFlag, error) {
 	}
 
 	return &f, nil
+}
+
+func (f *KnownUnknownFlag) StringFlag() string {
+	return strconv.FormatInt(f.Flag(), 10)
 }
 
 func (f *KnownUnknownFlag) Flag() int64 {

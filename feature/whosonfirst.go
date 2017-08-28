@@ -30,14 +30,20 @@ type WOFStandardPlacesResult struct {
 	WOFCountry               string  `json:"wof:country"`
 	WOFRepo                  string  `json:"wof:repo"`
 	WOFPath                  string  `json:"wof:path"`
-	MZURI                    string  `json:"mz:uri"`
 	WOFSupersededBy          []int64 `json:"wof:superseded_by"`
 	WOFSupersedes            []int64 `json:"wof:supersedes"`
-	MZIsCurrent              int64   `json:"mz:is_current"`
-	MZIsCeased               int64   `json:"mz:is_ceased"`
-	MZIsDeprecated           int64   `json:"mz:is_deprecated"`
-	MZIsSuperseded           int64   `json:"mz:is_superseded"`
-	MZIsSuperseding          int64   `json:"mz:is_superseding"`
+	MZURI                    string  `json:"mz:uri"`
+	WOFLatitude              float64 `json:"wof:latitude"`
+	WOFLongitude             float64 `json:"wof:longitude"`
+	WOFMinLatitude           float64 `json:"wof:min_latitude"`
+	WOFMinLongitude          float64 `json:"wof:min_longitude"`
+	WOFMaxLatitude           float64 `json:"wof:max_latitude"`
+	WOFMaxLongitude          float64 `json:"wof:max_longitude"`
+	WOFIsCurrent             int64   `json:"wof:is_current"`
+	WOFIsCeased              int64   `json:"wof:is_ceased"`
+	WOFIsDeprecated          int64   `json:"wof:is_deprecated"`
+	WOFIsSuperseded          int64   `json:"wof:is_superseded"`
+	WOFIsSuperseding         int64   `json:"wof:is_superseding"`
 }
 
 func EnsureWOFFeature(body []byte) error {
@@ -47,6 +53,9 @@ func EnsureWOFFeature(body []byte) error {
 		"properties.wof:name",
 		"properties.wof:repo",
 		"properties.wof:placetype",
+		"properties.geom:latitude",
+		"properties.geom:longitude",
+		"properties.geom:bbox",
 	}
 
 	err := utils.EnsureProperties(body, required)
@@ -179,25 +188,46 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 		return nil, err
 	}
 
+	centroid, err := whosonfirst.Centroid(f)
+
+	if err != nil {
+		return nil, err
+	}
+
+	bboxes, err := f.BoundingBoxes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	coord := centroid.Coord()
+	mbr := bboxes.MBR()
+
 	superseded_by := whosonfirst.SupersededBy(f)
 	supersedes := whosonfirst.Supersedes(f)
 
 	spr := WOFStandardPlacesResult{
-		WOFId:           id,
-		WOFParentId:     parent_id,
-		WOFPlacetype:    placetype,
-		WOFName:         name,
-		WOFCountry:      country,
-		WOFRepo:         repo,
-		WOFPath:         path,
-		MZURI:           uri,
-		MZIsCurrent:     is_current.Flag(),
-		MZIsCeased:      is_ceased.Flag(),
-		MZIsDeprecated:  is_deprecated.Flag(),
-		MZIsSuperseded:  is_superseded.Flag(),
-		MZIsSuperseding: is_superseding.Flag(),
-		WOFSupersedes:   supersedes,
-		WOFSupersededBy: superseded_by,
+		WOFId:            id,
+		WOFParentId:      parent_id,
+		WOFPlacetype:     placetype,
+		WOFName:          name,
+		WOFCountry:       country,
+		WOFRepo:          repo,
+		WOFPath:          path,
+		MZURI:            uri,
+		WOFLatitude:      coord.Y,
+		WOFLongitude:     coord.X,
+		WOFMinLatitude:   mbr.Min.Y,
+		WOFMinLongitude:  mbr.Min.X,
+		WOFMaxLatitude:   mbr.Max.Y,
+		WOFMaxLongitude:  mbr.Max.X,
+		WOFIsCurrent:     is_current.Flag(),
+		WOFIsCeased:      is_ceased.Flag(),
+		WOFIsDeprecated:  is_deprecated.Flag(),
+		WOFIsSuperseded:  is_superseded.Flag(),
+		WOFIsSuperseding: is_superseding.Flag(),
+		WOFSupersedes:    supersedes,
+		WOFSupersededBy:  superseded_by,
 	}
 
 	return &spr, nil
@@ -236,23 +266,23 @@ func (spr *WOFStandardPlacesResult) URI() string {
 }
 
 func (spr *WOFStandardPlacesResult) IsCurrent() flags.ExistentialFlag {
-	return existentialFlag(spr.MZIsCurrent)
+	return existentialFlag(spr.WOFIsCurrent)
 }
 
 func (spr *WOFStandardPlacesResult) IsCeased() flags.ExistentialFlag {
-	return existentialFlag(spr.MZIsCeased)
+	return existentialFlag(spr.WOFIsCeased)
 }
 
 func (spr *WOFStandardPlacesResult) IsDeprecated() flags.ExistentialFlag {
-	return existentialFlag(spr.MZIsDeprecated)
+	return existentialFlag(spr.WOFIsDeprecated)
 }
 
 func (spr *WOFStandardPlacesResult) IsSuperseded() flags.ExistentialFlag {
-	return existentialFlag(spr.MZIsSuperseded)
+	return existentialFlag(spr.WOFIsSuperseded)
 }
 
 func (spr *WOFStandardPlacesResult) IsSuperseding() flags.ExistentialFlag {
-	return existentialFlag(spr.MZIsSuperseding)
+	return existentialFlag(spr.WOFIsSuperseding)
 }
 
 func (spr *WOFStandardPlacesResult) SupersededBy() []int64 {

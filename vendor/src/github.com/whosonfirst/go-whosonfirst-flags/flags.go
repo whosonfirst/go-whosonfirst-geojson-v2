@@ -1,6 +1,7 @@
 package flags
 
 type ExistentialFlag interface {
+	StringFlag() string
 	Flag() int64
 	IsTrue() bool
 	IsFalse() bool

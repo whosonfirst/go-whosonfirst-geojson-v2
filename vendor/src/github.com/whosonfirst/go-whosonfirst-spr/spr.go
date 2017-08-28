@@ -13,6 +13,12 @@ type StandardPlacesResult interface {
 	Repo() string
 	Path() string
 	URI() string
+	Latitude() float64
+	Longitude() float64
+	MinLatitude() float64
+	MinLongitude() float64
+	MaxLatitude() float64
+	MaxLongitude() float64
 	IsCurrent() flags.ExistentialFlag
 	IsCeased() flags.ExistentialFlag
 	IsDeprecated() flags.ExistentialFlag

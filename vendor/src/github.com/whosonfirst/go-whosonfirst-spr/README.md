@@ -32,11 +32,17 @@ type StandardPlacesResult interface {
 	Repo() string
 	Path() string
 	URI() string
-	IsCurrent() bool
-	IsCeased() bool
-	IsDeprecated() bool
-	IsSuperseded() bool
-	IsSuperseding() bool
+	Latitude() float64
+	Longitude() float64
+	MinLatitude() float64
+	MinLongitude() float64
+	MaxLatitude() float64
+	MaxLongitude() float64
+	IsCurrent() flags.ExistentialFlag
+	IsCeased() flags.ExistentialFlag
+	IsDeprecated() flags.ExistentialFlag
+	IsSuperseded() flags.ExistentialFlag
+	IsSuperseding() flags.ExistentialFlag
 	SupersededBy() []int64
 	Supersedes() []int64
 }
