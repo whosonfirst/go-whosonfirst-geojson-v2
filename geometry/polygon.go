@@ -2,6 +2,7 @@ package geometry
 
 import (
 	"errors"
+	"fmt"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
@@ -94,9 +95,38 @@ func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
 
 		}
 
+	case "Point":
+
+		lat := coords[1].Float()
+		lon := coords[0].Float()
+
+		coord, _ := utils.NewCoordinateFromLatLons(lat, lon)
+
+		coords := []geom.Coord{
+			coord, coord,
+			coord, coord,
+			coord,
+		}
+
+		exterior, err := utils.NewPolygonFromCoords(coords)
+
+		if err != nil {
+			return nil, err
+		}
+
+		interior := make([]geom.Polygon, 0)
+
+		polygon := Polygon{
+			exterior: exterior,
+			interior: interior,
+		}
+
+		return []geojson.Polygon{polygon}, nil
+
 	default:
 
-		return nil, errors.New("Invalid geometry type")
+		msg := fmt.Sprintf("Invalid geometry type '%s'", t.String())
+		return nil, errors.New(msg)
 	}
 
 	return polys, nil
