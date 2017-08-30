@@ -8,6 +8,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-flags/existential"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
+	"strings"
 )
 
 type WOFCentroid struct {
@@ -295,7 +296,38 @@ func Supersedes(f geojson.Feature) []int64 {
 	return supersedes
 }
 
+func Names(f geojson.Feature) map[string][]string {
+
+	names_map := make(map[string][]string)
+
+	r := gjson.GetBytes(f.Bytes(), "properties")
+
+	for k, v := range r.Map() {
+
+		if !strings.HasPrefix(k, "name:") {
+			continue
+		}
+
+		name := strings.Replace(k, "name:", "", 1)
+		names := make([]string, 0)
+
+		for _, n := range v.Array() {
+			names = append(names, n.String())
+		}
+
+		names_map[name] = names
+	}
+
+	return names_map
+}
+
+// DEPRECATED - PLEASE FOR TO BE USING Hierarchies
+
 func Hierarchy(f geojson.Feature) []map[string]int64 {
+	return Hierarchies(f)
+}
+
+func Hierarchies(f geojson.Feature) []map[string]int64 {
 
 	hierarchies := make([]map[string]int64, 0)
 
