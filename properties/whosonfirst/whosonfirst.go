@@ -306,16 +306,14 @@ func Names(f geojson.Feature) map[string][]string {
 		return names_map
 	}
 
-	possible := r.Map()
-
-	if !possible.Exists() {
-		return names_map
-	}
-
-	for k, v := range possible {
+	for k, v := range r.Map() {
 
 		if !strings.HasPrefix(k, "name:") {
 			continue
+		}
+
+		if !v.Exists(){
+		   continue
 		}
 
 		name := strings.Replace(k, "name:", "", 1)
