@@ -321,6 +321,10 @@ func (spr *WOFStandardPlacesResult) Supersedes() []int64 {
 	return spr.WOFSupersedes
 }
 
+func (spr *WOFStandardPlacesResult) LastModified() int64 {
+	return spr.WOFLastModified
+}
+
 // we're going to assume that this won't fail since we already go through
 // the process of instantiating `flags.ExistentialFlag` thingies in SPR()
 // if we need to we'll just cache those instances in the `spr *WOFStandardPlacesResult`
