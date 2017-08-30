@@ -147,6 +147,15 @@ func Repo(f geojson.Feature) string {
 	return utils.StringProperty(f.Bytes(), possible, "whosonfirst-data-xx")
 }
 
+func LastModified(f geojson.Feature) int64 {
+
+	possible := []string{
+		"properties.wof:lastmodified",
+	}
+
+	return utils.Int64Property(f.Bytes(), possible, -1)
+}
+
 func IsCurrent(f geojson.Feature) (flags.ExistentialFlag, error) {
 
 	possible := []string{
