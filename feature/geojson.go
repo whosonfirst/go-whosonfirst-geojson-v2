@@ -2,17 +2,31 @@ package feature
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/skelterjohn/geom"
+	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"github.com/whosonfirst/go-whosonfirst-spr"
+	"strconv"
 )
 
 type GeoJSONFeature struct {
 	geojson.Feature
 	body []byte
+}
+
+type GeoJSONStandardPlacesResult struct {
+	spr.StandardPlacesResult `json:",omitempty"`
+	SPRId                    int64   `json:"spr:id"`
+	SPRName                  string  `json:"spr:name"`
+	SPRPlacetype             string  `json:"spr:placetype"`
+	SPRLatitude              float64 `json:"spr:latitude"`
+	SPRLongitude             float64 `json:"spr:longitude"`
+	SPRMinLatitude           float64 `json:"spr:min_latitude"`
+	SPRMinLongitude          float64 `json:"spr:min_longitude"`
+	SPRMaxLatitude           float64 `json:"spr:max_latitude"`
+	SPRMaxLongitude          float64 `json:"spr:max_longitude"`
 }
 
 func NewGeoJSONFeature(body []byte) (geojson.Feature, error) {
@@ -89,5 +103,123 @@ func (f *GeoJSONFeature) Polygons() ([]geojson.Polygon, error) {
 }
 
 func (f *GeoJSONFeature) SPR() (spr.StandardPlacesResult, error) {
-	return nil, errors.New("SPR is not implemented yet.")
+
+	id, err := strconv.ParseInt(f.Id(), 10, 64)
+
+	if err != nil {
+		id = -1
+	}
+
+	bboxes, err := f.BoundingBoxes()
+
+	if err != nil {
+		return nil, err
+	}
+
+	mbr := bboxes.MBR()
+
+	lat := mbr.Min.Y + ((mbr.Max.Y - mbr.Min.Y) / 2.0)
+	lon := mbr.Min.X + ((mbr.Max.X - mbr.Min.X) / 2.0)
+
+	spr := GeoJSONStandardPlacesResult{
+		SPRId:           id,
+		SPRPlacetype:    f.Placetype(),
+		SPRName:         f.Name(),
+		SPRLatitude:     lat,
+		SPRLongitude:    lon,
+		SPRMinLatitude:  mbr.Min.Y,
+		SPRMinLongitude: mbr.Min.X,
+		SPRMaxLatitude:  mbr.Max.Y,
+		SPRMaxLongitude: mbr.Max.X,
+	}
+
+	return &spr, nil
+}
+
+func (spr *GeoJSONStandardPlacesResult) Id() int64 {
+	return spr.SPRId
+}
+
+func (spr *GeoJSONStandardPlacesResult) ParentId() int64 {
+	return -1
+}
+
+func (spr *GeoJSONStandardPlacesResult) Name() string {
+	return spr.SPRName
+}
+
+func (spr *GeoJSONStandardPlacesResult) Placetype() string {
+	return spr.SPRPlacetype
+}
+
+func (spr *GeoJSONStandardPlacesResult) Country() string {
+	return "XX"
+}
+
+func (spr *GeoJSONStandardPlacesResult) Repo() string {
+	return ""
+}
+
+func (spr *GeoJSONStandardPlacesResult) Path() string {
+	return ""
+}
+
+func (spr *GeoJSONStandardPlacesResult) URI() string {
+	return ""
+}
+
+func (spr *GeoJSONStandardPlacesResult) Latitude() float64 {
+	return spr.SPRLatitude
+}
+
+func (spr *GeoJSONStandardPlacesResult) Longitude() float64 {
+	return spr.SPRLongitude
+}
+
+func (spr *GeoJSONStandardPlacesResult) MinLatitude() float64 {
+	return spr.SPRMinLatitude
+}
+
+func (spr *GeoJSONStandardPlacesResult) MinLongitude() float64 {
+	return spr.SPRMinLongitude
+}
+
+func (spr *GeoJSONStandardPlacesResult) MaxLatitude() float64 {
+	return spr.SPRLatitude
+}
+
+func (spr *GeoJSONStandardPlacesResult) MaxLongitude() float64 {
+	return spr.SPRMaxLongitude
+}
+
+func (spr *GeoJSONStandardPlacesResult) IsCurrent() flags.ExistentialFlag {
+	return existentialFlag(-1)
+}
+
+func (spr *GeoJSONStandardPlacesResult) IsCeased() flags.ExistentialFlag {
+	return existentialFlag(-1)
+}
+
+func (spr *GeoJSONStandardPlacesResult) IsDeprecated() flags.ExistentialFlag {
+	return existentialFlag(-1)
+}
+
+func (spr *GeoJSONStandardPlacesResult) IsSuperseded() flags.ExistentialFlag {
+	return existentialFlag(-1)
+}
+
+func (spr *GeoJSONStandardPlacesResult) IsSuperseding() flags.ExistentialFlag {
+	return existentialFlag(-1)
+}
+
+func (spr *GeoJSONStandardPlacesResult) SupersededBy() []int64 {
+	return []int64{}
+}
+
+func (spr *GeoJSONStandardPlacesResult) Supersedes() []int64 {
+	return []int64{}
+}
+
+func (spr *GeoJSONStandardPlacesResult) LastModified() int64 {
+	return -1
 }
