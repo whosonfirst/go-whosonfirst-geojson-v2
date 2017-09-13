@@ -10,17 +10,17 @@ import (
 )
 
 type Polygon struct {
-	geojson.Polygon
-	exterior geom.Polygon
-	interior []geom.Polygon
+	geojson.Polygon `json:",omitempty"`
+	Exterior        geom.Polygon   `json:"exterior"`
+	Interior        []geom.Polygon `json:"interior"`
 }
 
 func (p Polygon) ExteriorRing() geom.Polygon {
-	return p.exterior
+	return p.Exterior
 }
 
 func (p Polygon) InteriorRings() []geom.Polygon {
-	return p.interior
+	return p.Interior
 }
 
 func (p Polygon) ContainsCoord(c geom.Coord) bool {
@@ -117,8 +117,8 @@ func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
 		interior := make([]geom.Polygon, 0)
 
 		polygon := Polygon{
-			exterior: exterior,
-			interior: interior,
+			Exterior: exterior,
+			Interior: interior,
 		}
 
 		return []geojson.Polygon{polygon}, nil
@@ -159,8 +159,8 @@ func gjson_coordsToPolygon(r gjson.Result) (geojson.Polygon, error) {
 	}
 
 	polygon := Polygon{
-		exterior: exterior,
-		interior: interior,
+		Exterior: exterior,
+		Interior: interior,
 	}
 
 	return &polygon, nil

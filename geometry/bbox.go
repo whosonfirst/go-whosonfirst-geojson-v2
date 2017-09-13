@@ -6,17 +6,17 @@ import (
 )
 
 type Bboxes struct {
-	geojson.BoundingBoxes
-	bounds []*geom.Rect
-	mbr    geom.Rect
+	geojson.BoundingBoxes `json:",omitempty"`
+	BBoxesBounds          []*geom.Rect `json:"bounds"`
+	BBoxesMBR             geom.Rect    `json:"mbr"`
 }
 
 func (b Bboxes) Bounds() []*geom.Rect {
-	return b.bounds
+	return b.BBoxesBounds
 }
 
 func (b Bboxes) MBR() geom.Rect {
-	return b.mbr
+	return b.BBoxesMBR
 }
 
 func BoundingBoxesForFeature(f geojson.Feature) (geojson.BoundingBoxes, error) {
@@ -40,8 +40,8 @@ func BoundingBoxesForFeature(f geojson.Feature) (geojson.BoundingBoxes, error) {
 	}
 
 	wb := Bboxes{
-		bounds: bounds,
-		mbr:    mbr,
+		BBoxesBounds: bounds,
+		BBoxesMBR:    mbr,
 	}
 
 	return wb, nil
