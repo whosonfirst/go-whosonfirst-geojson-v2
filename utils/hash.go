@@ -2,9 +2,28 @@ package utils
 
 import (
 	"errors"
+	"github.com/mmcloughlin/geohash"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-hash"
 )
+
+func GeohashFeature(f geojson.Feature) (string, error) {
+
+	bboxes, err := f.BoundingBoxes()
+
+	if err != nil {
+		return "", err
+	}
+
+	mbr := bboxes.MBR()
+	center := mbr.Center()
+
+	lat := center.Y
+	lon := center.X
+
+	gh := geohash.Encode(lat, lon)
+	return gh, nil
+}
 
 func HashFeature(f geojson.Feature) (string, error) {
 

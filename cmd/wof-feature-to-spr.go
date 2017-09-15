@@ -14,7 +14,7 @@ func main() {
 
 	for _, path := range flag.Args() {
 
-		f, err := feature.LoadWOFFeatureFromFile(path)
+		f, err := feature.LoadFeatureFromFile(path)
 
 		if err != nil {
 			log.Fatal(err)

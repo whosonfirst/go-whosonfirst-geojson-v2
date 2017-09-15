@@ -6,9 +6,10 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geometry"
+	props_geom "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"github.com/whosonfirst/go-whosonfirst-spr"
-	"strconv"
+	"strings"
 )
 
 type GeoJSONFeature struct {
@@ -18,7 +19,7 @@ type GeoJSONFeature struct {
 
 type GeoJSONStandardPlacesResult struct {
 	spr.StandardPlacesResult `json:",omitempty"`
-	SPRId                    int64   `json:"spr:id"`
+	SPRId                    string  `json:"spr:id"`
 	SPRName                  string  `json:"spr:name"`
 	SPRPlacetype             string  `json:"spr:placetype"`
 	SPRLatitude              float64 `json:"spr:latitude"`
@@ -73,7 +74,13 @@ func (f *GeoJSONFeature) Id() string {
 		"properties.id",
 	}
 
-	return utils.StringProperty(f.Bytes(), possible, "")
+	id := utils.StringProperty(f.Bytes(), possible, "")
+
+	if id == "" {
+		id = f.uid()
+	}
+
+	return id
 }
 
 func (f *GeoJSONFeature) Name() string {
@@ -82,7 +89,13 @@ func (f *GeoJSONFeature) Name() string {
 		"properties.name",
 	}
 
-	return utils.StringProperty(f.Bytes(), possible, "")
+	name := utils.StringProperty(f.Bytes(), possible, "")
+
+	if name == "" {
+		name = f.uid()
+	}
+
+	return name
 }
 
 func (f *GeoJSONFeature) Placetype() string {
@@ -91,7 +104,25 @@ func (f *GeoJSONFeature) Placetype() string {
 		"properties.placetype",
 	}
 
-	return utils.StringProperty(f.Bytes(), possible, "")
+	pt := utils.StringProperty(f.Bytes(), possible, "")
+
+	if pt == "" {
+		pt = props_geom.Type(f)
+		pt = strings.ToLower(pt)
+	}
+
+	return pt
+}
+
+func (f *GeoJSONFeature) uid() string {
+
+	h, err := utils.GeohashFeature(f)
+
+	if err != nil {
+		h = "..."
+	}
+
+	return h
 }
 
 func (f *GeoJSONFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
@@ -103,12 +134,6 @@ func (f *GeoJSONFeature) Polygons() ([]geojson.Polygon, error) {
 }
 
 func (f *GeoJSONFeature) SPR() (spr.StandardPlacesResult, error) {
-
-	id, err := strconv.ParseInt(f.Id(), 10, 64)
-
-	if err != nil {
-		id = -1
-	}
 
 	bboxes, err := f.BoundingBoxes()
 
@@ -122,7 +147,7 @@ func (f *GeoJSONFeature) SPR() (spr.StandardPlacesResult, error) {
 	lon := mbr.Min.X + ((mbr.Max.X - mbr.Min.X) / 2.0)
 
 	spr := GeoJSONStandardPlacesResult{
-		SPRId:           id,
+		SPRId:           f.Id(),
 		SPRPlacetype:    f.Placetype(),
 		SPRName:         f.Name(),
 		SPRLatitude:     lat,
@@ -136,12 +161,12 @@ func (f *GeoJSONFeature) SPR() (spr.StandardPlacesResult, error) {
 	return &spr, nil
 }
 
-func (spr *GeoJSONStandardPlacesResult) Id() int64 {
+func (spr *GeoJSONStandardPlacesResult) Id() string {
 	return spr.SPRId
 }
 
-func (spr *GeoJSONStandardPlacesResult) ParentId() int64 {
-	return -1
+func (spr *GeoJSONStandardPlacesResult) ParentId() string {
+	return ""
 }
 
 func (spr *GeoJSONStandardPlacesResult) Name() string {

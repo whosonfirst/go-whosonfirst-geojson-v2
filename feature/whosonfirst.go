@@ -237,12 +237,12 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 	return &spr, nil
 }
 
-func (spr *WOFStandardPlacesResult) Id() int64 {
-	return spr.WOFId
+func (spr *WOFStandardPlacesResult) Id() string {
+	return strconv.FormatInt(spr.WOFId, 10)
 }
 
-func (spr *WOFStandardPlacesResult) ParentId() int64 {
-	return spr.WOFParentId
+func (spr *WOFStandardPlacesResult) ParentId() string {
+	return strconv.FormatInt(spr.WOFParentId, 10)
 }
 
 func (spr *WOFStandardPlacesResult) Name() string {
