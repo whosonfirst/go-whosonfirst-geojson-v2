@@ -33,3 +33,5 @@ type Polygon interface {
 	InteriorRings() []geom.Polygon
 	ContainsCoord(geom.Coord) bool
 }
+
+type Geometry interface{}

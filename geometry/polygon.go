@@ -1,12 +1,14 @@
 package geometry
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
+	_ "log"
 )
 
 type Polygon struct {
@@ -45,7 +47,7 @@ func (p Polygon) ContainsCoord(c geom.Coord) bool {
 	return contains
 }
 
-func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
+func GeometryForFeature(f geojson.Feature) (*geojson.Geometry, error) {
 
 	t := gjson.GetBytes(f.Bytes(), "geometry.type")
 
@@ -58,6 +60,40 @@ func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
 	if !c.Exists() {
 		return nil, errors.New("Failed to determine geometry.coordinates")
 	}
+
+	g := gjson.GetBytes(f.Bytes(), "geometry")
+
+	var geom geojson.Geometry
+	err := gjson.Unmarshal([]byte(g.Raw), &geom)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &geom, nil
+}
+
+func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
+
+	g, err := GeometryForFeature(f)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return PolygonsForGeometry(g)
+}
+
+func PolygonsForGeometry(g *geojson.Geometry) ([]geojson.Polygon, error) {
+
+	b, err := json.Marshal(g)
+
+	if err != nil {
+		return nil, err
+	}
+
+	t := gjson.GetBytes(b, "type")
+	c := gjson.GetBytes(b, "coordinates")
 
 	coords := c.Array()
 
