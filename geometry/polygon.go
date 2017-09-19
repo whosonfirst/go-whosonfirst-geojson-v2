@@ -49,6 +49,8 @@ func (p Polygon) ContainsCoord(c geom.Coord) bool {
 
 func GeometryForFeature(f geojson.Feature) (*geojson.Geometry, error) {
 
+     	// see notes below in PolygonsForFeature
+	
 	t := gjson.GetBytes(f.Bytes(), "geometry.type")
 
 	if !t.Exists() {
@@ -75,6 +77,25 @@ func GeometryForFeature(f geojson.Feature) (*geojson.Geometry, error) {
 
 func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
 
+     	// so here's the thing - in the first function (GeometryForFeature)
+	// we're going UnMarshal the geomtry and then in the second function
+	// (PolygonsForGeometry) we Marshal it again - we do this because the
+	// second function hands off to a bunch of 'gjsonToFoo' functions to
+	// create a bunch of of geojson.Polygon thingies... which can't be
+	// round-tripped to and from serialized blobs because the underlying
+	// geom package (specifically the polygon/path package) doesn't export
+	// public coordinates... which becomes a problem when you are trying
+	// to cache geojson thingies in go-whosonfirst-pip using a caching thing
+	// that writes to disk (or a database) and so have no way to rebuild
+	// the geometries (see above wrt public coordinates)... which means
+	// that we're probably going to change the interface for cache.Feature
+	// in go-whosonfirst-pip to require a blob of []byte rather than a set
+	// of []geojson.Polygon... so that's why we're two-stepping the existing
+	// bytes in f, mostly so that there is a generic GeometryForFeature
+	// function that caching layers can access... I mean I suppose we could
+	// monkey-patch the geom package too but not today
+	// (20170920/thisisaaronland)
+	
 	g, err := GeometryForFeature(f)
 
 	if err != nil {
