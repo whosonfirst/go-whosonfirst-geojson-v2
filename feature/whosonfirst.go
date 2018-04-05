@@ -128,7 +128,7 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 
 	err = EnsureWOFFeature(body)
 
-	if err != nil {
+	if err != nil && !warning.IsWarning(err) {
 		return nil, err
 	}
 
@@ -136,7 +136,10 @@ func NewWOFFeature(body []byte) (geojson.Feature, error) {
 		body: body,
 	}
 
-	return &f, nil
+	// because err might be a warning.Error / see notes above in EnsureWOFFeature
+	// I don't really love this... (20180405/thisisaaronland)
+
+	return &f, err
 }
 
 func (f *WOFFeature) String() string {
