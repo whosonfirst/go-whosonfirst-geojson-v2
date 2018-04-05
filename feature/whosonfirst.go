@@ -93,10 +93,25 @@ func EnsureWOFFeature(body []byte) error {
 		}
 	}
 
-	pt := utils.StringProperty(body, []string{"properties.wof:placetype"}, "")
+	// this pointless boolean check is here to stub out some condition
+	// where we may want or need to handle WOF documents with placetypes
+	// not already defined in core (like for anyone working on datasets
+	// outside the scope of core...) / the simple and dumb way to do this
+	// would be to read/write a global feature.FOO variable but I'd like
+	// to avoid that if possible / another possibility is to add hooks to
+	// go-whosonfirst-placetypes to add custom placetypes to the spec...
+	// maybe consider: https://github.com/lunemec/warning
+	// (20180405/thisisaaronland)
+	
+	placetype_validation := true
 
-	if !placetypes.IsValidPlacetype(pt) {
-		return errors.New("Invalid wof:placetype")
+	if placetype_validation {
+	
+		pt := utils.StringProperty(body, []string{"properties.wof:placetype"}, "")
+
+		if !placetypes.IsValidPlacetype(pt) {
+			return errors.New("Invalid wof:placetype")
+		}
 	}
 
 	// check wof:repo here?
