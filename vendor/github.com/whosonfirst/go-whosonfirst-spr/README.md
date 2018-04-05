@@ -24,8 +24,8 @@ _Please finish writing me..._
 
 ```
 type StandardPlacesResult interface {
-	Id() int64
-	ParentId() int64
+	Id() string
+	ParentId() string
 	Name() string
 	Placetype() string
 	Country() string
@@ -48,6 +48,8 @@ type StandardPlacesResult interface {
 }
 ```
 
+Flags are defined in the [go-whosonfirst-flags](https://github.com/whosonfirst/go-whosonfirst-flags) package.
+
 ## Background
 
 _Please write me..._
@@ -58,3 +60,4 @@ _Please write me..._
 ## See also
 
 * https://github.com/whosonfirst/go-whosonfirst-geojson-v2
+* https://github.com/whosonfirst/go-whosonfirst-flags

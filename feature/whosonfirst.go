@@ -2,7 +2,7 @@ package feature
 
 import (
 	"encoding/json"
-	"errors"
+	_ "errors"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-flags/existential"
@@ -13,6 +13,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-placetypes"
 	"github.com/whosonfirst/go-whosonfirst-spr"
 	"github.com/whosonfirst/go-whosonfirst-uri"
+	"github.com/whosonfirst/warning"
 	"strconv"
 )
 
@@ -93,25 +94,22 @@ func EnsureWOFFeature(body []byte) error {
 		}
 	}
 
-	// this pointless boolean check is here to stub out some condition
-	// where we may want or need to handle WOF documents with placetypes
+	// we may want or need to handle WOF documents with placetypes
 	// not already defined in core (like for anyone working on datasets
-	// outside the scope of core...) / the simple and dumb way to do this
-	// would be to read/write a global feature.FOO variable but I'd like
-	// to avoid that if possible / another possibility is to add hooks to
-	// go-whosonfirst-placetypes to add custom placetypes to the spec...
-	// maybe consider: https://github.com/lunemec/warning
+	// outside the scope of core...) / there is an open branch of the
+	// go-whosonfirst-placetypes package for adding custom placetypes
+	// but it's not at all clear whose vendor-ed (go-wof-pt) package
+	// will get used so never mind that / we could also add a global flag
+	// to this package to disable checks but on measure it seems best
+	// to issue a warning thing that implements the error interface and
+	// leave the details to individual applications / we are using a
+	// forked (to the whosonfirst org) version of https://github.com/lunemec/warning
 	// (20180405/thisisaaronland)
-	
-	placetype_validation := true
 
-	if placetype_validation {
-	
-		pt := utils.StringProperty(body, []string{"properties.wof:placetype"}, "")
+	pt := utils.StringProperty(body, []string{"properties.wof:placetype"}, "")
 
-		if !placetypes.IsValidPlacetype(pt) {
-			return errors.New("Invalid wof:placetype")
-		}
+	if !placetypes.IsValidPlacetype(pt) {
+		return warning.New("Invalid wof:placetype")
 	}
 
 	// check wof:repo here?
