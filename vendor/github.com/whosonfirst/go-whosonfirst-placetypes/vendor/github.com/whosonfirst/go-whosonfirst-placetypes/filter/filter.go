@@ -73,7 +73,7 @@ func (f *PlacetypesFilter) AllowFromString(pt_str string) (bool, error) {
 	pt, err := placetypes.GetPlacetypeByName(pt_str)
 
 	if err != nil {
-		return true, warning.New(err.Error())
+		return false, warning.New(err.Error())
 	}
 
 	return f.Allow(pt)
