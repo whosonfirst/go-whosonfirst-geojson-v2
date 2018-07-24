@@ -315,6 +315,36 @@ func Supersedes(f geojson.Feature) []int64 {
 	return supersedes
 }
 
+func BelongsTo(f geojson.Feature) []int64 {
+
+	belongsto := make([]int64, 0)
+
+	possible := gjson.GetBytes(f.Bytes(), "properties.wof:belongsto")
+
+	if possible.Exists() {
+
+		for _, id := range possible.Array() {
+			belongsto = append(belongsto, id.Int())
+		}
+	}
+
+	return belongsto
+}
+
+func IsBelongsTo(f geojson.Feature, id int64) bool {
+
+     possible := BelongsTo(f)
+
+     for _, test := range possible {
+
+     	if test == id {
+	   return true
+	}
+     }
+
+     return false
+}
+
 func Names(f geojson.Feature) map[string][]string {
 
 	names_map := make(map[string][]string)
