@@ -2,6 +2,7 @@ package whosonfirst
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst-flags"
@@ -146,6 +147,23 @@ func Label(f geojson.Feature) string {
 	}
 
 	return utils.StringProperty(f.Bytes(), possible, "")
+}
+
+func LabelOrDerived(f geojson.Feature) string {
+
+	label := Label(f)
+
+	if label == "" {
+
+		name := f.Name()
+
+		inc := utils.StringProperty(f.Bytes(), []string{"properties.edtf:inception"}, "uuuu")
+		ces := utils.StringProperty(f.Bytes(), []string{"properties.edtf:cessation"}, "uuuu")
+
+		label = fmt.Sprintf("%s (%s - %s)", name, inc, ces)
+	}
+
+	return label
 }
 
 func ParentId(f geojson.Feature) int64 {
