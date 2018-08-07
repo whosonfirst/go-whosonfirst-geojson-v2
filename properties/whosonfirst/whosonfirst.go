@@ -139,6 +139,15 @@ func Name(f geojson.Feature) string {
 	return utils.StringProperty(f.Bytes(), possible, "a place with no name")
 }
 
+func Label(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.wof:label",
+	}
+
+	return utils.StringProperty(f.Bytes(), possible, "")
+}
+
 func ParentId(f geojson.Feature) int64 {
 
 	possible := []string{
@@ -333,16 +342,16 @@ func BelongsTo(f geojson.Feature) []int64 {
 
 func IsBelongsTo(f geojson.Feature, id int64) bool {
 
-     possible := BelongsTo(f)
+	possible := BelongsTo(f)
 
-     for _, test := range possible {
+	for _, test := range possible {
 
-     	if test == id {
-	   return true
+		if test == id {
+			return true
+		}
 	}
-     }
 
-     return false
+	return false
 }
 
 func Names(f geojson.Feature) map[string][]string {
