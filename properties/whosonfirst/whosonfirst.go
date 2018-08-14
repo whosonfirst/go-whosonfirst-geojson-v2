@@ -166,6 +166,24 @@ func LabelOrDerived(f geojson.Feature) string {
 	return label
 }
 
+func DateSpan(f geojson.Feature) string {
+
+	lower := utils.StringProperty(f.Bytes(), []string{"properties.date:inception_lower"}, "uuuu")
+	upper := utils.StringProperty(f.Bytes(), []string{"properties.date:inception_upper"}, "uuuu")
+
+	/*
+		if lower == "uuuu" {
+			lower = utils.StringProperty(f.Bytes(), []string{"properties.edtf:inception"}, "uuuu")
+		}
+
+		if upper == "uuuu" {
+			upper = utils.StringProperty(f.Bytes(), []string{"properties.edtf:cessation"}, "uuuu")
+		}
+	*/
+
+	return fmt.Sprintf("%s-%s", lower, upper)
+}
+
 func ParentId(f geojson.Feature) int64 {
 
 	possible := []string{
