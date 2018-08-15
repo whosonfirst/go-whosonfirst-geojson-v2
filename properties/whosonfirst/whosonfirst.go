@@ -157,13 +157,21 @@ func LabelOrDerived(f geojson.Feature) string {
 
 		name := f.Name()
 
-		inc := utils.StringProperty(f.Bytes(), []string{"properties.edtf:inception"}, "uuuu")
-		ces := utils.StringProperty(f.Bytes(), []string{"properties.edtf:cessation"}, "uuuu")
+		inc := Inception(f)
+		ces := Cessation(f)
 
 		label = fmt.Sprintf("%s (%s - %s)", name, inc, ces)
 	}
 
 	return label
+}
+
+func Inception(f geojson.Feature) string {
+	return utils.StringProperty(f.Bytes(), []string{"properties.edtf:inception"}, "uuuu")
+}
+
+func Cessation(f geojson.Feature) string {
+	return utils.StringProperty(f.Bytes(), []string{"properties.edtf:cessation"}, "uuuu")
 }
 
 func DateSpan(f geojson.Feature) string {
