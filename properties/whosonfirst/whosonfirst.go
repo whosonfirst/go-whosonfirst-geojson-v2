@@ -169,7 +169,7 @@ func LabelOrDerived(f geojson.Feature) string {
 func DateSpan(f geojson.Feature) string {
 
 	lower := utils.StringProperty(f.Bytes(), []string{"properties.date:inception_lower"}, "uuuu")
-	upper := utils.StringProperty(f.Bytes(), []string{"properties.date:inception_upper"}, "uuuu")
+	upper := utils.StringProperty(f.Bytes(), []string{"properties.date:cessation_upper"}, "uuuu")
 
 	/*
 		if lower == "uuuu" {
