@@ -17,9 +17,11 @@ self:   prep
 	cp *.go src/github.com/whosonfirst/go-whosonfirst-placetypes/
 	cp filter/*.go src/github.com/whosonfirst/go-whosonfirst-placetypes/filter/
 	cp placetypes/*.go src/github.com/whosonfirst/go-whosonfirst-placetypes/placetypes/
+	cp -r vendor/* src
 
 deps:   self
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/warning"
+	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-cli"
 
 vendor-deps: rmdeps deps
 	if test ! -d vendor; then mkdir vendor; fi
@@ -32,6 +34,9 @@ fmt:
 	go fmt *.go
 	go fmt placetypes/*.go
 	go fmt filter/*.go
+
+bin:	self
+	@GOPATH=$(GOPATH) go build -o bin/wof-placetype-ancestors cmd/wof-placetype-ancestors.go
 
 test:	self
 	@GOPATH=$(GOPATH) go run cmd/test.go
