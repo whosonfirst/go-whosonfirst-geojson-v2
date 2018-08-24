@@ -9,6 +9,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-flags/existential"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
+	"github.com/whosonfirst/go-whosonfirst-placetypes"	
 	"strings"
 )
 
@@ -382,6 +383,76 @@ func BelongsTo(f geojson.Feature) []int64 {
 	}
 
 	return belongsto
+}
+
+// this does sort of beg the question of whether we want (need) to
+// have a corresponding HierarchiesOrdered function that would, I guess,
+// return a list of lists [[placetype, id]] but not today...
+// (20180824/thisisaaronland)
+
+func BelongsToOrdered(f geojson.Feature) ([]int64, error) {
+
+	combined := make(map[string][]int64)
+	hiers := Hierarchies(f)
+
+	for _, h := range hiers {
+
+		for k, id := range h {
+
+			k = strings.Replace(k, "_id", "", -1)
+
+			ids, ok := combined[k]
+
+			if !ok {
+				ids = make([]int64, 0)
+			}
+
+			append_ok := true
+
+			for _, test := range ids {
+				if id == test {
+					append_ok = false
+					break
+				}
+			}
+
+			if append_ok {
+				ids = append(ids, id)
+			}
+
+			combined[k] = ids
+		}
+	}
+
+	belongs_to := make([]int64, 0)
+	
+	str_pt := f.Placetype()
+	pt, err := placetypes.GetPlacetypeByName(str_pt)
+
+	if err != nil {
+		return belongs_to, err
+	}
+
+	roles := []string{
+		"common",
+		"optional",
+		"common_optional",
+	}
+
+	for _, a := range placetypes.AncestorsForRoles(pt, roles) {
+
+		ids, ok := combined[a.Name]
+
+		if !ok {
+			continue
+		}
+
+		for _, id := range ids {
+			belongs_to = append(belongs_to, id)
+		}
+	}
+
+	return belongs_to, nil
 }
 
 func IsBelongsTo(f geojson.Feature, id int64) bool {
