@@ -2,6 +2,7 @@ package whosonfirst
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/skelterjohn/geom"
 	"github.com/tidwall/gjson"
@@ -9,8 +10,9 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-flags/existential"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
-	"github.com/whosonfirst/go-whosonfirst-placetypes"	
+	"github.com/whosonfirst/go-whosonfirst-placetypes"
 	"strings"
+	"time"
 )
 
 type WOFConcordances map[string]string
@@ -191,6 +193,32 @@ func DateSpan(f geojson.Feature) string {
 	*/
 
 	return fmt.Sprintf("%s-%s", lower, upper)
+}
+
+func DateRange(f geojson.Feature) (time.Time, time.Time, error) {
+
+	str_lower := utils.StringProperty(f.Bytes(), []string{"properties.date:inception_lower"}, "uuuu")
+	str_upper := utils.StringProperty(f.Bytes(), []string{"properties.date:cessation_upper"}, "uuuu")
+
+	ymd := "2006-01-02"
+
+	lower, err_lower := time.Parse(ymd, str_lower)
+	upper, err_upper := time.Parse(ymd, str_upper)
+
+	var err error
+
+	if err_lower != nil && err_upper != nil {
+		msg := fmt.Sprintf("failed to parse date:inception_lower %s and date:cessation_upper %s", err_lower, err_upper)
+		err = errors.New(msg)
+	} else if err_lower != nil {
+		msg := fmt.Sprintf("failed to parse date:inception_lower %s", err_lower)
+		err = errors.New(msg)
+	} else if err_upper != nil {
+		msg := fmt.Sprintf("failed to parse date:cessation_upper %s", err_upper)
+		err = errors.New(msg)
+	}
+
+	return lower, upper, err
 }
 
 func ParentId(f geojson.Feature) int64 {
@@ -425,7 +453,7 @@ func BelongsToOrdered(f geojson.Feature) ([]int64, error) {
 	}
 
 	belongs_to := make([]int64, 0)
-	
+
 	str_pt := f.Placetype()
 	pt, err := placetypes.GetPlacetypeByName(str_pt)
 
