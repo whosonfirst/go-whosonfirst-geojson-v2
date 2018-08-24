@@ -195,7 +195,7 @@ func DateSpan(f geojson.Feature) string {
 	return fmt.Sprintf("%s-%s", lower, upper)
 }
 
-func DateRange(f geojson.Feature) (time.Time, time.Time, error) {
+func DateRange(f geojson.Feature) (*time.Time, *time.Time, error) {
 
 	str_lower := utils.StringProperty(f.Bytes(), []string{"properties.date:inception_lower"}, "uuuu")
 	str_upper := utils.StringProperty(f.Bytes(), []string{"properties.date:cessation_upper"}, "uuuu")
@@ -218,7 +218,7 @@ func DateRange(f geojson.Feature) (time.Time, time.Time, error) {
 		err = errors.New(msg)
 	}
 
-	return lower, upper, err
+	return &lower, &upper, err
 }
 
 func ParentId(f geojson.Feature) int64 {
