@@ -74,6 +74,47 @@ true
 2018/08/23 17:10:42 23 planet
 ```
 
+### wof-placetype-children
+
+```
+./bin/wof-placetype-children locality
+2018/08/24 18:16:53 0 borough
+2018/08/24 18:16:53 1 postalcode
+2018/08/24 18:16:53 2 macrohood
+2018/08/24 18:16:53 3 neighbourhood
+2018/08/24 18:16:53 4 campus
+```
+
+### wof-placetype-descendants
+
+```
+./bin/wof-placetype-descendants -role common -role common_optional -role optional country
+2018/08/24 18:15:49 0 marinearea
+2018/08/24 18:15:49 1 timezone
+2018/08/24 18:15:49 2 disputed
+2018/08/24 18:15:49 3 macroregion
+2018/08/24 18:15:49 4 region
+2018/08/24 18:15:49 5 macrocounty
+2018/08/24 18:15:49 6 county
+2018/08/24 18:15:49 7 localadmin
+2018/08/24 18:15:49 8 locality
+2018/08/24 18:15:49 9 postalcode
+2018/08/24 18:15:49 10 campus
+2018/08/24 18:15:49 11 borough
+2018/08/24 18:15:49 12 macrohood
+2018/08/24 18:15:49 13 neighbourhood
+2018/08/24 18:15:49 14 microhood
+2018/08/24 18:15:49 15 intersection
+2018/08/24 18:15:49 16 address
+2018/08/24 18:15:49 17 building
+2018/08/24 18:15:49 18 venue
+2018/08/24 18:15:49 19 wing
+2018/08/24 18:15:49 20 concourse
+2018/08/24 18:15:49 21 arcade
+2018/08/24 18:15:49 22 installation
+2018/08/24 18:15:49 23 enclosure
+```
+
 ## See also
 
 * https://github.com/whosonfirst/whosonfirst-placetypes

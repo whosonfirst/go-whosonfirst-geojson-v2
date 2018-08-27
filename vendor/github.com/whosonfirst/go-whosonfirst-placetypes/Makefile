@@ -37,6 +37,8 @@ fmt:
 
 bin:	self
 	@GOPATH=$(GOPATH) go build -o bin/wof-placetype-ancestors cmd/wof-placetype-ancestors.go
+	@GOPATH=$(GOPATH) go build -o bin/wof-placetype-children cmd/wof-placetype-children.go
+	@GOPATH=$(GOPATH) go build -o bin/wof-placetype-descendants cmd/wof-placetype-descendants.go
 
 test:	self
 	@GOPATH=$(GOPATH) go run cmd/test.go

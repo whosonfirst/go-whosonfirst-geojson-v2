@@ -163,7 +163,13 @@ func LabelOrDerived(f geojson.Feature) string {
 		inc := Inception(f)
 		ces := Cessation(f)
 
-		label = fmt.Sprintf("%s (%s - %s)", name, inc, ces)
+		if inc == "uuuu" && ces == "uuuu" {
+			label = name
+		} else if ces == "open" || ces == "uuuu" {
+			label = fmt.Sprintf("%s (%s)", name, inc)
+		} else {
+			label = fmt.Sprintf("%s (%s - %s)", name, inc, ces)
+		}
 	}
 
 	return label
