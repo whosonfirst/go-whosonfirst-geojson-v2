@@ -10,7 +10,7 @@ rmdeps:
 build:	rmdeps deps fmt bin
 
 self:   prep
-	if test -d src/github.com/whosonfirst/go-whosonfirst-placetypes; then rm -rf src/github.com/whosonfirst/go-whosonfirst-placetypes; fi
+	if test -d src; then rm -rf src; fi
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-placetypes/filter
 	mkdir -p src/github.com/whosonfirst/go-whosonfirst-placetypes/placetypes
 	cp *.go src/github.com/whosonfirst/go-whosonfirst-placetypes/
@@ -19,12 +19,11 @@ self:   prep
 	cp placetypes/*.go src/github.com/whosonfirst/go-whosonfirst-placetypes/placetypes/
 	cp -r vendor/* src
 
-deps:   self
+deps:   
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/warning"
 	@GOPATH=$(GOPATH) go get -u "github.com/whosonfirst/go-whosonfirst-cli"
 
 vendor-deps: rmdeps deps
-	if test ! -d vendor; then mkdir vendor; fi
 	if test -d vendor; then rm -rf vendor; fi
 	cp -r src vendor
 	find vendor -name '.git' -print -type d -exec rm -rf {} +
