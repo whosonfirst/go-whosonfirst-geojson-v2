@@ -2,6 +2,16 @@
 
 Go package for working with URIs for Who's On First documents
 
+## Install
+
+You will need to have both `Go` and the `make` programs installed on your computer. Assuming you do just type:
+
+```
+make bin
+```
+
+All of this package's dependencies are bundled with the code in the `vendor` directory.
+
 ## Example
 
 ### Simple
@@ -53,6 +63,45 @@ Produces:
 ## The Long Version
 
 Please read this: https://github.com/whosonfirst/whosonfirst-cookbook/blob/master/how_to/creating_alt_geometries.md
+
+## Tools
+
+### wof-uri-expand
+
+Expand one or more IDs in to their URIs (relative or absolute).
+
+```
+./bin/wof-uri-expand -h
+Usage of ./bin/wof-uri-expand:
+  -root string
+    	An optional (filesystem) root to prepend URIs with
+  -stdin
+    	Read IDs from STDIN
+```
+
+For example:
+
+```
+./bin/wof-uri-expand 1234556 46632
+123/455/6/1234556.geojson
+466/32/46632.geojson
+```
+
+Or:
+
+```
+./bin/wof-uri-expand -root /usr/local/data 1234556 46632
+/usr/local/data/123/455/6/1234556.geojson
+/usr/local/data/466/32/46632.geojson
+```
+
+Or:
+
+```
+cat ./test | ./bin/wof-uri-expand -stdin
+487/463/636/453/487463636453.geojson
+982/635/344/2/9826353442.geojson
+```
 
 ## See also
 

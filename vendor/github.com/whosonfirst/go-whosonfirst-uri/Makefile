@@ -27,3 +27,4 @@ fmt:	self
 	go fmt uri.go
 
 bin:	self
+	@GOPATH=$(GOPATH) go build -o bin/wof-uri-expand cmd/wof-uri-expand.go
