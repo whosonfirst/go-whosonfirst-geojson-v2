@@ -12,11 +12,35 @@ import (
 )
 
 type URIArgs struct {
+	// PLEASE UPDATE THIS TO USE/EXPECT AN *AltGeom KTHXBYE (20190501/thisisaaronland)
 	Alternate bool
 	Source    string
 	Function  string
 	Extras    []string
 	Strict    bool
+}
+
+type AltGeom struct {
+	Source   string
+	Function string
+	Extras   []string
+}
+
+func (a *AltGeom) String() string {
+
+	parts := []string{
+		a.Source,
+	}
+
+	if a.Function != "" {
+		parts = append(parts, a.Function)
+	}
+
+	for _, ex := range a.Extras {
+		parts = append(parts, ex)
+	}
+
+	return strings.Join(parts, "-")
 }
 
 func NewDefaultURIArgs() *URIArgs {
@@ -182,23 +206,57 @@ func IsWOFFile(path string) (bool, error) {
 
 func IsAltFile(path string) (bool, error) {
 
-	re_altfile, err := regexp.Compile(`^\d+\-alt\-.*\.geojson$`)
+	alt, err := AltGeomFromPath(path)
 
 	if err != nil {
 		return false, err
+	}
+
+	if alt == nil {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func AltGeomFromPath(path string) (*AltGeom, error) {
+
+	re_altfile, err := regexp.Compile(`^\d+\-alt\-(.*)\.geojson$`)
+
+	if err != nil {
+		return nil, err
 	}
 
 	abs_path, err := filepath.Abs(path)
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	fname := filepath.Base(abs_path)
 
-	alt := re_altfile.MatchString(fname)
+	m := re_altfile.FindStringSubmatch(fname)
 
-	return alt, nil
+	if len(m) == 0 {
+		return nil, nil
+	}
+
+	str_parts := m[1]
+	parts := strings.Split(str_parts, "-")
+
+	alt := AltGeom{
+		Source: parts[0],
+	}
+
+	if len(parts) >= 2 {
+		alt.Function = parts[1]
+	}
+
+	if len(parts) >= 3 {
+		alt.Extras = parts[2:]
+	}
+
+	return &alt, nil
 }
 
 func IdFromPath(path string) (int64, error) {

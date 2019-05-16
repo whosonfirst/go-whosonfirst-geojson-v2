@@ -1,0 +1,43 @@
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
+# github.com/go-ini/ini v1.42.0
+github.com/go-ini/ini
+# github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce
+github.com/hashicorp/errwrap
+# github.com/hashicorp/go-multierror v0.0.0-20171204182908-b7773ae21874
+github.com/hashicorp/go-multierror
+# github.com/mmcloughlin/geohash v0.9.0
+github.com/mmcloughlin/geohash
+# github.com/pkg/errors v0.8.0
+github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/skelterjohn/geom v0.0.0-20180103000000-96f3e8a219c5f4276b0dda3568d80c4e02a50116
+github.com/skelterjohn/geom
+# github.com/stretchr/testify v1.3.0
+github.com/stretchr/testify/assert
+# github.com/tidwall/gjson v1.2.1
+github.com/tidwall/gjson
+# github.com/tidwall/match v1.0.1
+github.com/tidwall/match
+# github.com/tidwall/pretty v0.0.0-20190325153808-1166b9ac2b65
+github.com/tidwall/pretty
+# github.com/whosonfirst/go-whosonfirst-cli v0.1.0
+github.com/whosonfirst/go-whosonfirst-cli/flags
+# github.com/whosonfirst/go-whosonfirst-flags v0.1.0
+github.com/whosonfirst/go-whosonfirst-flags
+github.com/whosonfirst/go-whosonfirst-flags/existential
+# github.com/whosonfirst/go-whosonfirst-hash v0.1.0
+github.com/whosonfirst/go-whosonfirst-hash
+# github.com/whosonfirst/go-whosonfirst-placetypes v0.1.0
+github.com/whosonfirst/go-whosonfirst-placetypes
+github.com/whosonfirst/go-whosonfirst-placetypes/placetypes
+# github.com/whosonfirst/go-whosonfirst-sources v0.1.0
+github.com/whosonfirst/go-whosonfirst-sources/sources
+github.com/whosonfirst/go-whosonfirst-sources
+# github.com/whosonfirst/go-whosonfirst-spr v0.1.0
+github.com/whosonfirst/go-whosonfirst-spr
+# github.com/whosonfirst/go-whosonfirst-uri v0.1.0
+github.com/whosonfirst/go-whosonfirst-uri
+# github.com/whosonfirst/warning v0.1.0
+github.com/whosonfirst/warning

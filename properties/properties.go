@@ -4,5 +4,5 @@ package properties
 // or b) that this is even necessary... (20170720/thisisaaronland)
 
 type Properties interface {
-     String() string, err
+
 }
