@@ -114,6 +114,15 @@ func Concordances(f geojson.Feature) (WOFConcordances, error) {
 	return concordances, nil
 }
 
+func Source(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.src:geom",
+	}
+
+	return utils.StringProperty(f.Bytes(), possible, "unknown")
+}
+
 func Country(f geojson.Feature) string {
 
 	possible := []string{
@@ -262,6 +271,15 @@ func LastModified(f geojson.Feature) int64 {
 	}
 
 	return utils.Int64Property(f.Bytes(), possible, -1)
+}
+
+func IsAlt(f geojson.Feature) bool {
+
+	if ParentId(f) != -1 {
+		return true
+	}
+
+	return false
 }
 
 func IsCurrent(f geojson.Feature) (flags.ExistentialFlag, error) {
