@@ -275,7 +275,7 @@ func LastModified(f geojson.Feature) int64 {
 
 func IsAlt(f geojson.Feature) bool {
 
-	if ParentId(f) != -1 {
+	if ParentId(f) == -1 {
 		return true
 	}
 
