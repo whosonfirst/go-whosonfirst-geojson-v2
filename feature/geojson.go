@@ -87,6 +87,7 @@ func (f *GeoJSONFeature) Name() string {
 
 	possible := []string{
 		"properties.name",
+		"properties.wof:name",
 	}
 
 	name := utils.StringProperty(f.Bytes(), possible, "")
@@ -102,6 +103,7 @@ func (f *GeoJSONFeature) Placetype() string {
 
 	possible := []string{
 		"properties.placetype",
+		"properties.wof:placetype",
 	}
 
 	pt := utils.StringProperty(f.Bytes(), possible, "")
