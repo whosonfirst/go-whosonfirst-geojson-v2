@@ -275,7 +275,22 @@ func LastModified(f geojson.Feature) int64 {
 
 func IsAlt(f geojson.Feature) bool {
 
-	if ParentId(f) == -1 {
+	// this is the new new but won't "work" until we backfill all
+	// 26M files and the export tools to set this property
+	// (20190821/thisisaaronland)
+
+	v := utils.StringProperty(f.Bytes(), []string{"properties.wof:alt_label"}, "")
+
+	if v != "" {
+		return true
+	}
+
+	// we used to test that wof:parent_id wasn't -1 but that's a bad test since
+	// plenty of stuff might have a parent ID of -1 and really what we want to
+	// test is the presence of the property not the value
+	// (20190821/thisisaaronland)
+
+	if !utils.HasProperty(f.Bytes(), []string{"properties.wof:parent_id"}) {
 		return true
 	}
 
