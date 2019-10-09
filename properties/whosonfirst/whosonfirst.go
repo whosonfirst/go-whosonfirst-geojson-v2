@@ -289,9 +289,9 @@ func IsAlt(f geojson.Feature) bool {
 	
 	// SFO syntax (initial proposal)
 	
-	v := utils.StringProperty(f.Bytes(), []string{"properties.wof:alt_label"}, "")
+	w := utils.StringProperty(f.Bytes(), []string{"properties.wof:alt_label"}, "")
 
-	if v != "" {
+	if w != "" {
 		return true
 	}
 
