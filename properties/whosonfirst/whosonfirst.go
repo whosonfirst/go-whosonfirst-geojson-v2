@@ -280,15 +280,15 @@ func IsAlt(f geojson.Feature) bool {
 	// (20190821/thisisaaronland)
 
 	// WOF admin data syntax (finalized)
-	
+
 	v := utils.StringProperty(f.Bytes(), []string{"properties.src:alt_label"}, "")
 
 	if v != "" {
 		return true
 	}
-	
+
 	// SFO syntax (initial proposal)
-	
+
 	w := utils.StringProperty(f.Bytes(), []string{"properties.wof:alt_label"}, "")
 
 	if w != "" {

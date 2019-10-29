@@ -18,10 +18,10 @@ so for now we'll just put tests here... (20190821/thisisaaronland)
 
 import (
 	"errors"
-	"testing"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/feature"
-	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"	
+	"github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"strings"
+	"testing"
 )
 
 func TestIsAlt(t *testing.T) {
@@ -289,14 +289,14 @@ func TestIsAlt(t *testing.T) {
 }`
 
 	primary_r := strings.NewReader(str_primary)
-	
+
 	primary_f, err := feature.LoadGeoJSONFeatureFromReader(primary_r)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	if whosonfirst.IsAlt(primary_f){
+	if whosonfirst.IsAlt(primary_f) {
 		t.Error(errors.New("Primary feature incorrectly identified as alt file"))
 	}
 
@@ -308,7 +308,7 @@ func TestIsAlt(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !whosonfirst.IsAlt(alt_f){
+	if !whosonfirst.IsAlt(alt_f) {
 		t.Error(errors.New("Alt feature not identified as such"))
 	}
 }

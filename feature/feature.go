@@ -15,6 +15,9 @@ func LoadFeature(body []byte) (geojson.Feature, error) {
 	wofid := gjson.GetBytes(body, "properties.wof:id")
 
 	if wofid.Exists() {
+
+		// CHECK ALT FILES HERE...
+
 		return NewWOFFeature(body)
 	}
 
@@ -51,6 +54,8 @@ func LoadWOFFeatureFromReader(fh io.Reader) (geojson.Feature, error) {
 		return nil, err
 	}
 
+	// CHECK ALT FILES HERE...
+
 	return NewWOFFeature(body)
 }
 
@@ -61,6 +66,8 @@ func LoadWOFFeatureFromFile(path string) (geojson.Feature, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// CHECK ALT FILES HERE...
 
 	return NewWOFFeature(body)
 }

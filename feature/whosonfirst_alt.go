@@ -2,14 +2,15 @@ package feature
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/geometry"
-	props_geom "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/geometry"
+	props_wof "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"github.com/whosonfirst/go-whosonfirst-spr"
-	"strings"
+	"strconv"
 )
 
 type WOFAltFeature struct {
@@ -69,60 +70,26 @@ func (f *WOFAltFeature) Bytes() []byte {
 
 func (f *WOFAltFeature) Id() string {
 
-	possible := []string{
-		"id",
-		"properties.id",
-	}
-
-	id := utils.StringProperty(f.Bytes(), possible, "")
-
-	if id == "" {
-		id = f.uid()
-	}
-
-	return id
+	id := props_wof.Id(f)
+	return strconv.FormatInt(id, 10)
 }
 
 func (f *WOFAltFeature) Name() string {
 
+	id := f.Id()
+
 	possible := []string{
-		"properties.name",
+		"properties.src:geom",
 	}
 
-	name := utils.StringProperty(f.Bytes(), possible, "")
+	src_geom := utils.StringProperty(f.Bytes(), possible, "unknown")
 
-	if name == "" {
-		name = f.uid()
-	}
-
-	return name
+	return fmt.Sprintf("%d alt file (%s)", id, src_geom)
 }
 
 func (f *WOFAltFeature) Placetype() string {
 
-	possible := []string{
-		"properties.placetype",
-	}
-
-	pt := utils.StringProperty(f.Bytes(), possible, "")
-
-	if pt == "" {
-		pt = props_geom.Type(f)
-		pt = strings.ToLower(pt)
-	}
-
-	return pt
-}
-
-func (f *WOFAltFeature) uid() string {
-
-	h, err := utils.GeohashFeature(f)
-
-	if err != nil {
-		h = "..."
-	}
-
-	return h
+	return "alt"
 }
 
 func (f *WOFAltFeature) BoundingBoxes() (geojson.BoundingBoxes, error) {
