@@ -6,7 +6,7 @@ github.com/hashicorp/go-multierror
 github.com/mmcloughlin/geohash
 # github.com/skelterjohn/geom v0.0.0-20180103142417-96f3e8a219c5
 github.com/skelterjohn/geom
-# github.com/tidwall/gjson v1.3.2
+# github.com/tidwall/gjson v1.3.4
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.0.1
 github.com/tidwall/match
