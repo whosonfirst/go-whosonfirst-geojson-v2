@@ -1,0 +1,93 @@
+{
+  "id": 101851199,
+  "type": "Feature",
+  "properties": {
+    "edtf:cessation":"2018-10-24",
+    "edtf:inception":"uuuu",
+    "geom:area":0.0,
+    "geom:area_square_m":0.0,
+    "geom:bbox":"2.493097,44.344395,2.493097,44.344395",
+    "geom:latitude":44.344395,
+    "geom:longitude":2.493097,
+    "iso:country":"FR",
+    "lbl:latitude":44.344395,
+    "lbl:longitude":2.493097,
+    "mps:latitude":44.344395,
+    "mps:longitude":2.493097,
+    "mz:hierarchy_label":1,
+    "mz:is_current":0,
+    "name:fra_x_preferred":[
+        "Ampiac"
+    ],
+    "qs:a0":"France",
+    "qs:a1":"*Aveyron",
+    "qs:a1r":"0Midi-Pyr\u00e9n\u00e9es",
+    "qs:adm0":"France",
+    "qs:id":0,
+    "qs:la_lc":"*",
+    "qs:level":"locality",
+    "qs:loc":"Ampiac",
+    "qs:loc_alt":"Ampiac",
+    "qs:pop":0,
+    "qs:source":"ACustom EuroGlobalMap + UMZ Urban Polygons + Geonames + GeoPlanet",
+    "qs:type":"buffered point",
+    "src:geom":"whosonfirst",
+    "src:geom_alt":[
+        "quattroshapes"
+    ],
+    "src:geom_via":"quattroshapes",
+    "src:lbl:centroid":"mapshaper",
+    "wof:belongsto":[
+        85683301,
+        102191581,
+        85633147,
+        404354411,
+        404227821,
+        1108826387,
+        136253037,
+        102071363
+    ],
+    "wof:breaches":[],
+    "wof:concordances":{
+        "fct:id":"0a5b0ac0-8f76-11e1-848f-cfd5bf3ef515",
+        "gn:id":7645555,
+        "gp:id":29331915
+    },
+    "wof:country":"FR",
+    "wof:geomhash":"656f8b127edc94cb8fc8a5de6177df6e",
+    "wof:hierarchy":[
+        {
+            "continent_id":102191581,
+            "country_id":85633147,
+            "county_id":102071363,
+            "empire_id":136253037,
+            "localadmin_id":404354411,
+            "locality_id":101851199,
+            "macrocounty_id":404227821,
+            "macroregion_id":1108826387,
+            "region_id":85683301
+        }
+    ],
+    "wof:id":101851199,
+    "wof:lang":[
+        "fre"
+    ],
+    "wof:lastmodified":1544741725,
+    "wof:name":"Ampiac",
+    "wof:parent_id":404354411,
+    "wof:placetype":"locality",
+    "wof:repo":"whosonfirst-data-admin-fr",
+    "wof:superseded_by":[
+        1360697843
+    ],
+    "wof:supersedes":[],
+    "wof:tags":[]
+},
+  "bbox": [
+    2.493097,
+    44.344395,
+    2.493097,
+    44.344395
+],
+  "geometry": {"coordinates":[2.493097,44.344395],"type":"Point"}
+}
