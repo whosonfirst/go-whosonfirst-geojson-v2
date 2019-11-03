@@ -10,6 +10,7 @@ import (
 	props_wof "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"github.com/whosonfirst/go-whosonfirst-spr"
+	"github.com/whosonfirst/warning"
 	"strconv"
 )
 
@@ -31,12 +32,35 @@ type WOFAltStandardPlacesResult struct {
 	SPRMaxLongitude          float64 `json:"spr:max_longitude"`
 }
 
+func EnsureWOFAltFeature(body []byte) error {
+
+	required := []string{
+		"properties.wof:id",
+		"properties.wof:repo",
+		"properties.src:alt_label",
+	}
+
+	err := utils.EnsureProperties(body, required)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewWOFAltFeature(body []byte) (geojson.Feature, error) {
 
 	var stub interface{}
 	err := json.Unmarshal(body, &stub)
 
 	if err != nil {
+		return nil, err
+	}
+
+	err = EnsureWOFAltFeature(body)
+
+	if err != nil && !warning.IsWarning(err) {
 		return nil, err
 	}
 
@@ -84,7 +108,7 @@ func (f *WOFAltFeature) Name() string {
 
 	src_geom := utils.StringProperty(f.Bytes(), possible, "unknown")
 
-	return fmt.Sprintf("%d alt file (%s)", id, src_geom)
+	return fmt.Sprintf("%s alt geometry (%s)", id, src_geom)
 }
 
 func (f *WOFAltFeature) Placetype() string {
