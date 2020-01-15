@@ -117,6 +117,7 @@ func Concordances(f geojson.Feature) (WOFConcordances, error) {
 func Source(f geojson.Feature) string {
 
 	possible := []string{
+		"properties.src:alt_label",
 		"properties.src:geom",
 	}
 

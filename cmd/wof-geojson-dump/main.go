@@ -43,7 +43,7 @@ func main() {
 		fmt.Printf("MBR %s\n", bboxes.MBR())
 
 		fmt.Printf("IS ALT %t\n", whosonfirst.IsAlt(f))
-		
+
 		wof, err := feature.LoadWOFFeatureFromFile(path)
 
 		if err != nil {
@@ -56,11 +56,11 @@ func main() {
 
 			wof = alt
 		}
-		
+
 		fmt.Printf("WOF repo is %s\n", whosonfirst.Repo(wof))
 
 		fmt.Printf("IS ALT %t\n", whosonfirst.IsAlt(wof))
-		
+
 		str_geom, err := geometry.ToString(wof)
 
 		if err != nil {
