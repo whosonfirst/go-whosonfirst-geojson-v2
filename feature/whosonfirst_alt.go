@@ -102,11 +102,7 @@ func (f *WOFAltFeature) Name() string {
 
 	id := f.Id()
 
-	possible := []string{
-		"properties.src:geom",
-	}
-
-	src_geom := utils.StringProperty(f.Bytes(), possible, "unknown")
+	src_geom := props_wof.Source(f)
 
 	return fmt.Sprintf("%s alt geometry (%s)", id, src_geom)
 }
