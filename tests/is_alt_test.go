@@ -277,6 +277,7 @@ func TestIsAlt(t *testing.T) {
   "properties": {"wof:repo":"whosonfirst-data-admin-us",
     "src:geom":"quattroshapes_pg",
     "wof:geomhash":"fb1dae04ae7723ab1279a131242cf2fc",
+    "wof:alt_label": "quattroshapes_pg",
     "wof:id":85885597
 },
   "bbox": [
