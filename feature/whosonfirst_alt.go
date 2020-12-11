@@ -2,6 +2,7 @@ package feature
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-flags"
@@ -10,8 +11,10 @@ import (
 	props_wof "github.com/whosonfirst/go-whosonfirst-geojson-v2/properties/whosonfirst"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2/utils"
 	"github.com/whosonfirst/go-whosonfirst-spr"
+	"github.com/whosonfirst/go-whosonfirst-uri"
 	"github.com/whosonfirst/warning"
 	"strconv"
+	"strings"
 )
 
 type WOFAltFeature struct {
@@ -30,6 +33,8 @@ type WOFAltStandardPlacesResult struct {
 	SPRMinLongitude          float64 `json:"spr:min_longitude"`
 	SPRMaxLatitude           float64 `json:"spr:max_latitude"`
 	SPRMaxLongitude          float64 `json:"spr:max_longitude"`
+	SPRPath                  string  `json:"spr:path"`
+	SPRRepo                  string  `json:"spr:repo"`
 }
 
 func EnsureWOFAltFeature(body []byte) error {
@@ -108,7 +113,6 @@ func (f *WOFAltFeature) Name() string {
 }
 
 func (f *WOFAltFeature) Placetype() string {
-
 	return "alt"
 }
 
@@ -121,6 +125,39 @@ func (f *WOFAltFeature) Polygons() ([]geojson.Polygon, error) {
 }
 
 func (f *WOFAltFeature) SPR() (spr.StandardPlacesResult, error) {
+
+	id := props_wof.Id(f)
+	alt_label := props_wof.AltLabel(f)
+	label_parts := strings.Split(alt_label, "-")
+
+	if len(label_parts) == 0 {
+		return nil, errors.New("Invalid src:alt_label property")
+	}
+
+	alt_geom := &uri.AltGeom{
+		Source: label_parts[0],
+	}
+
+	if len(label_parts) >= 2 {
+		alt_geom.Function = label_parts[1]
+	}
+
+	if len(label_parts) >= 3 {
+		alt_geom.Extras = label_parts[2:]
+	}
+
+	uri_args := &uri.URIArgs{
+		IsAlternate: true,
+		AltGeom:     alt_geom,
+	}
+
+	rel_path, err := uri.Id2RelPath(id, uri_args)
+
+	if err != nil {
+		return nil, err
+	}
+
+	repo := props_wof.Repo(f)
 
 	bboxes, err := f.BoundingBoxes()
 
@@ -143,6 +180,8 @@ func (f *WOFAltFeature) SPR() (spr.StandardPlacesResult, error) {
 		SPRMinLongitude: mbr.Min.X,
 		SPRMaxLatitude:  mbr.Max.Y,
 		SPRMaxLongitude: mbr.Max.X,
+		SPRPath:         rel_path,
+		SPRRepo:         repo,
 	}
 
 	return &spr, nil
@@ -169,11 +208,11 @@ func (spr *WOFAltStandardPlacesResult) Country() string {
 }
 
 func (spr *WOFAltStandardPlacesResult) Repo() string {
-	return ""
+	return spr.SPRRepo
 }
 
 func (spr *WOFAltStandardPlacesResult) Path() string {
-	return ""
+	return spr.SPRPath
 }
 
 func (spr *WOFAltStandardPlacesResult) URI() string {
