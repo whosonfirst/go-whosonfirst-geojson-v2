@@ -24,17 +24,17 @@ type WOFAltFeature struct {
 
 type WOFAltStandardPlacesResult struct {
 	spr.StandardPlacesResult `json:",omitempty"`
-	SPRId                    string  `json:"spr:id"`
-	SPRName                  string  `json:"spr:name"`
-	SPRPlacetype             string  `json:"spr:placetype"`
-	SPRLatitude              float64 `json:"spr:latitude"`
-	SPRLongitude             float64 `json:"spr:longitude"`
-	SPRMinLatitude           float64 `json:"spr:min_latitude"`
-	SPRMinLongitude          float64 `json:"spr:min_longitude"`
-	SPRMaxLatitude           float64 `json:"spr:max_latitude"`
-	SPRMaxLongitude          float64 `json:"spr:max_longitude"`
-	SPRPath                  string  `json:"spr:path"`
-	SPRRepo                  string  `json:"spr:repo"`
+	WOFId                    string  `json:"wof:id"`
+	WOFName                  string  `json:"wof:name"`
+	WOFPlacetype             string  `json:"wof:placetype"`
+	MZLatitude               float64 `json:"mz:latitude"`
+	MZLongitude              float64 `json:"mz:longitude"`
+	MZMinLatitude            float64 `json:"spr:min_latitude"`
+	MZMinLongitude           float64 `json:"mz:min_longitude"`
+	MZMaxLatitude            float64 `json:"mz:max_latitude"`
+	MZMaxLongitude           float64 `json:"mz:max_longitude"`
+	WOFPath                  string  `json:"wof:path"`
+	WOFRepo                  string  `json:"wof:repo"`
 }
 
 func EnsureWOFAltFeature(body []byte) error {
@@ -171,36 +171,36 @@ func (f *WOFAltFeature) SPR() (spr.StandardPlacesResult, error) {
 	lon := mbr.Min.X + ((mbr.Max.X - mbr.Min.X) / 2.0)
 
 	spr := WOFAltStandardPlacesResult{
-		SPRId:           f.Id(),
-		SPRPlacetype:    f.Placetype(),
-		SPRName:         f.Name(),
-		SPRLatitude:     lat,
-		SPRLongitude:    lon,
-		SPRMinLatitude:  mbr.Min.Y,
-		SPRMinLongitude: mbr.Min.X,
-		SPRMaxLatitude:  mbr.Max.Y,
-		SPRMaxLongitude: mbr.Max.X,
-		SPRPath:         rel_path,
-		SPRRepo:         repo,
+		WOFId:          f.Id(),
+		WOFPlacetype:   f.Placetype(),
+		WOFName:        f.Name(),
+		MZLatitude:     lat,
+		MZLongitude:    lon,
+		MZMinLatitude:  mbr.Min.Y,
+		MZMinLongitude: mbr.Min.X,
+		MZMaxLatitude:  mbr.Max.Y,
+		MZMaxLongitude: mbr.Max.X,
+		WOFPath:        rel_path,
+		WOFRepo:        repo,
 	}
 
 	return &spr, nil
 }
 
 func (spr *WOFAltStandardPlacesResult) Id() string {
-	return spr.SPRId
+	return spr.WOFId
 }
 
 func (spr *WOFAltStandardPlacesResult) ParentId() string {
-	return ""
+	return "-1"
 }
 
 func (spr *WOFAltStandardPlacesResult) Name() string {
-	return spr.SPRName
+	return spr.WOFName
 }
 
 func (spr *WOFAltStandardPlacesResult) Placetype() string {
-	return spr.SPRPlacetype
+	return spr.WOFPlacetype
 }
 
 func (spr *WOFAltStandardPlacesResult) Country() string {
@@ -208,11 +208,11 @@ func (spr *WOFAltStandardPlacesResult) Country() string {
 }
 
 func (spr *WOFAltStandardPlacesResult) Repo() string {
-	return spr.SPRRepo
+	return spr.WOFRepo
 }
 
 func (spr *WOFAltStandardPlacesResult) Path() string {
-	return spr.SPRPath
+	return spr.WOFPath
 }
 
 func (spr *WOFAltStandardPlacesResult) URI() string {
@@ -220,27 +220,27 @@ func (spr *WOFAltStandardPlacesResult) URI() string {
 }
 
 func (spr *WOFAltStandardPlacesResult) Latitude() float64 {
-	return spr.SPRLatitude
+	return spr.MZLatitude
 }
 
 func (spr *WOFAltStandardPlacesResult) Longitude() float64 {
-	return spr.SPRLongitude
+	return spr.MZLongitude
 }
 
 func (spr *WOFAltStandardPlacesResult) MinLatitude() float64 {
-	return spr.SPRMinLatitude
+	return spr.MZMinLatitude
 }
 
 func (spr *WOFAltStandardPlacesResult) MinLongitude() float64 {
-	return spr.SPRMinLongitude
+	return spr.MZMinLongitude
 }
 
 func (spr *WOFAltStandardPlacesResult) MaxLatitude() float64 {
-	return spr.SPRLatitude
+	return spr.MZLatitude
 }
 
 func (spr *WOFAltStandardPlacesResult) MaxLongitude() float64 {
-	return spr.SPRMaxLongitude
+	return spr.MZMaxLongitude
 }
 
 func (spr *WOFAltStandardPlacesResult) IsCurrent() flags.ExistentialFlag {
