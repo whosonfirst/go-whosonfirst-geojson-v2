@@ -124,6 +124,15 @@ func Source(f geojson.Feature) string {
 	return utils.StringProperty(f.Bytes(), possible, "unknown")
 }
 
+func AltLabel(f geojson.Feature) string {
+
+	possible := []string{
+		"properties.src:alt_label",
+	}
+
+	return utils.StringProperty(f.Bytes(), possible, "")
+}
+
 func Country(f geojson.Feature) string {
 
 	possible := []string{
