@@ -1,7 +1,6 @@
 package geometry
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	pm_geojson "github.com/paulmach/go.geojson"
@@ -30,57 +29,28 @@ func (p Polygon) ContainsCoord(c geom.Coord) bool {
 
 	ext := p.ExteriorRing()
 
-	contains := false
+	if !ext.ContainsCoord(c) {
+		return false
+	}
 
-	if ext.ContainsCoord(c) {
-
-		contains = true
-
-		for _, int := range p.InteriorRings() {
-
-			if int.ContainsCoord(c) {
-				contains = false
-				break
-			}
+	for _, int := range p.InteriorRings() {
+		
+		if int.ContainsCoord(c) {
+			return false
 		}
 	}
 
-	return contains
+	return true
 }
 
-func GeometryForFeature(f geojson.Feature) (*geojson.Geometry, error) {
-
-	// see notes below in PolygonsForFeature
-
-	t := gjson.GetBytes(f.Bytes(), "geometry.type")
-
-	if !t.Exists() {
-		return nil, errors.New("Failed to determine geometry.type")
-	}
-
-	c := gjson.GetBytes(f.Bytes(), "geometry.coordinates")
-
-	if !c.Exists() {
-		return nil, errors.New("Failed to determine geometry.coordinates")
-	}
-
-	g := gjson.GetBytes(f.Bytes(), "geometry")
-
-	var geom geojson.Geometry
-	err := json.Unmarshal([]byte(g.Raw), &geom)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &geom, nil
+func GeometryForFeature(f geojson.Feature) (*pm_geojson.Geometry, error) {
+	geom_rsp := gjson.GetBytes(f.Bytes(), "geometry")
+	return pm_geojson.UnmarshalGeometry([]byte(geom_rsp.String()))
 }
 
 func PolygonsForFeature(f geojson.Feature) ([]geojson.Polygon, error) {
 
-	geom_rsp := gjson.GetBytes(f.Bytes(), "geometry")
-
-	g, err := pm_geojson.UnmarshalGeometry([]byte(geom_rsp.String()))
+	g, err := GeometryForFeature(f)
 
 	if err != nil {
 		return nil, err
