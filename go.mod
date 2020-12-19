@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/mmcloughlin/geohash v0.9.0
+	github.com/paulmach/go.geojson v1.4.0
 	github.com/skelterjohn/geom v0.0.0-20180103142417-96f3e8a219c5
 	github.com/tidwall/gjson v1.6.0
 	github.com/whosonfirst/go-whosonfirst-flags v0.1.0
