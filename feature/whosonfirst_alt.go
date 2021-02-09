@@ -29,7 +29,7 @@ type WOFAltStandardPlacesResult struct {
 	WOFPlacetype             string  `json:"wof:placetype"`
 	MZLatitude               float64 `json:"mz:latitude"`
 	MZLongitude              float64 `json:"mz:longitude"`
-	MZMinLatitude            float64 `json:"spr:min_latitude"`
+	MZMinLatitude            float64 `json:"mz:min_latitude"`
 	MZMinLongitude           float64 `json:"mz:min_longitude"`
 	MZMaxLatitude            float64 `json:"mz:max_latitude"`
 	MZMaxLongitude           float64 `json:"mz:max_longitude"`
