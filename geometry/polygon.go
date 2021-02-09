@@ -34,7 +34,7 @@ func (p Polygon) ContainsCoord(c geom.Coord) bool {
 	}
 
 	for _, int := range p.InteriorRings() {
-		
+
 		if int.ContainsCoord(c) {
 			return false
 		}
@@ -151,7 +151,7 @@ func newPolygon(rings [][][]float64) Polygon {
 
 	if len(rings) > 1 {
 
-		for _, coords := range rings {
+		for _, coords := range rings[1:] {
 			interior = append(interior, newRing(coords))
 		}
 	}
