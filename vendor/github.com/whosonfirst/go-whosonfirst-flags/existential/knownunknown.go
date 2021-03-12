@@ -13,6 +13,24 @@ type KnownUnknownFlag struct {
 	confidence bool
 }
 
+func NewKnownUnknownFlagsArray(values ...int64) ([]flags.ExistentialFlag, error) {
+
+	existential_flags := make([]flags.ExistentialFlag, 0)
+
+	for _, v := range values {
+
+		fl, err := NewKnownUnknownFlag(v)
+
+		if err != nil {
+			return nil, err
+		}
+
+		existential_flags = append(existential_flags, fl)
+	}
+
+	return existential_flags, nil
+}
+
 func NewKnownUnknownFlag(i int64) (flags.ExistentialFlag, error) {
 
 	var status bool
