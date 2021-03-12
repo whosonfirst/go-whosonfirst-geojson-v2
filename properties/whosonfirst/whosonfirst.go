@@ -368,7 +368,7 @@ func IsDeprecated(f geojson.Feature) (flags.ExistentialFlag, error) {
 	// "-" is not part of the EDTF spec it's just a default
 	// string that we define for use in the switch statements
 	// below (20210209/thisisaaronland)
-	
+
 	v := utils.StringProperty(f.Bytes(), possible, "-")
 
 	// 2019 EDTF spec (ISO-8601:1/2)
@@ -385,7 +385,7 @@ func IsDeprecated(f geojson.Feature) (flags.ExistentialFlag, error) {
 	// 2012 EDTF spec - annoyingly the semantics of ""
 	// changed between the two (was meant to signal open
 	// and now signals unknown)
-	
+
 	switch v {
 	case "-":
 		return existential.NewKnownUnknownFlag(0)
@@ -394,10 +394,10 @@ func IsDeprecated(f geojson.Feature) (flags.ExistentialFlag, error) {
 	case "uuuu":
 		return existential.NewKnownUnknownFlag(-1)
 	default:
-		// 
+		//
 	}
 
-	return existential.NewKnownUnknownFlag(1)	
+	return existential.NewKnownUnknownFlag(1)
 }
 
 func IsCeased(f geojson.Feature) (flags.ExistentialFlag, error) {

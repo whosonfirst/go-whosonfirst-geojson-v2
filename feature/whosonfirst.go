@@ -3,6 +3,8 @@ package feature
 import (
 	"encoding/json"
 	_ "errors"
+	"github.com/sfomuseum/go-edtf"
+	"github.com/sfomuseum/go-edtf/parser"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-flags/existential"
@@ -24,6 +26,8 @@ type WOFFeature struct {
 
 type WOFStandardPlacesResult struct {
 	spr.StandardPlacesResult `json:",omitempty"`
+	EDTFInception            string  `json:"edtf:inception"`
+	EDTFCessation            string  `json:"edtf:cessation"`
 	WOFId                    int64   `json:"wof:id"`
 	WOFParentId              int64   `json:"wof:parent_id"`
 	WOFName                  string  `json:"wof:name"`
@@ -191,6 +195,27 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 	country := whosonfirst.Country(f)
 	repo := whosonfirst.Repo(f)
 
+	inception := whosonfirst.Inception(f)
+	cessation := whosonfirst.Cessation(f)
+
+	if inception != edtf.UNKNOWN {
+
+		_, err := parser.ParseString(inception)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if cessation != edtf.UNKNOWN {
+
+		_, err := parser.ParseString(cessation)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	path, err := uri.Id2RelPath(id)
 
 	if err != nil {
@@ -263,6 +288,8 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 		WOFPath:         path,
 		WOFSupersedes:   supersedes,
 		WOFSupersededBy: superseded_by,
+		EDTFInception:   inception,
+		EDTFCessation:   cessation,
 		MZURI:           uri,
 		MZLatitude:      coord.Y,
 		MZLongitude:     coord.X,
@@ -291,6 +318,29 @@ func (spr *WOFStandardPlacesResult) ParentId() string {
 
 func (spr *WOFStandardPlacesResult) Name() string {
 	return spr.WOFName
+}
+
+func (spr *WOFStandardPlacesResult) Inception() *edtf.EDTFDate {
+	return spr.edtfDate(spr.EDTFInception)
+}
+
+func (spr *WOFStandardPlacesResult) Cessation() *edtf.EDTFDate {
+	return spr.edtfDate(spr.EDTFCessation)
+}
+
+func (spr *WOFStandardPlacesResult) edtfDate(edtf_str string) *edtf.EDTFDate {
+
+	if edtf_str == edtf.UNKNOWN {
+		return nil
+	}
+
+	d, err := parser.ParseString(edtf_str)
+
+	if err != nil {
+		return nil
+	}
+
+	return d
 }
 
 func (spr *WOFStandardPlacesResult) Placetype() string {
