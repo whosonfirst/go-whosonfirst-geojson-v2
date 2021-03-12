@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/sfomuseum/go-edtf"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
@@ -241,6 +242,14 @@ func (spr *WOFAltStandardPlacesResult) MaxLatitude() float64 {
 
 func (spr *WOFAltStandardPlacesResult) MaxLongitude() float64 {
 	return spr.MZMaxLongitude
+}
+
+func (spr *WOFAltStandardPlacesResult) Inception() *edtf.EDTFDate {
+	return nil
+}
+
+func (spr *WOFAltStandardPlacesResult) Cessation() *edtf.EDTFDate {
+	return nil
 }
 
 func (spr *WOFAltStandardPlacesResult) IsCurrent() flags.ExistentialFlag {

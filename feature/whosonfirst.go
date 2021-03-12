@@ -198,22 +198,16 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 	inception := whosonfirst.Inception(f)
 	cessation := whosonfirst.Cessation(f)
 
-	if inception != edtf.UNKNOWN {
+	_, err := parser.ParseString(inception)
 
-		_, err := parser.ParseString(inception)
-
-		if err != nil {
-			return nil, err
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	if cessation != edtf.UNKNOWN {
+	_, err = parser.ParseString(cessation)
 
-		_, err := parser.ParseString(cessation)
-
-		if err != nil {
-			return nil, err
-		}
+	if err != nil {
+		return nil, err
 	}
 
 	path, err := uri.Id2RelPath(id)
@@ -329,10 +323,6 @@ func (spr *WOFStandardPlacesResult) Cessation() *edtf.EDTFDate {
 }
 
 func (spr *WOFStandardPlacesResult) edtfDate(edtf_str string) *edtf.EDTFDate {
-
-	if edtf_str == edtf.UNKNOWN {
-		return nil
-	}
 
 	d, err := parser.ParseString(edtf_str)
 

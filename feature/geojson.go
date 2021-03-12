@@ -2,6 +2,7 @@ package feature
 
 import (
 	"encoding/json"
+	"github.com/sfomuseum/go-edtf"
 	"github.com/skelterjohn/geom"
 	"github.com/whosonfirst/go-whosonfirst-flags"
 	"github.com/whosonfirst/go-whosonfirst-geojson-v2"
@@ -175,6 +176,14 @@ func (spr *GeoJSONStandardPlacesResult) Name() string {
 
 func (spr *GeoJSONStandardPlacesResult) Placetype() string {
 	return spr.SPRPlacetype
+}
+
+func (spr *GeoJSONStandardPlacesResult) Inception() *edtf.EDTFDate {
+	return nil
+}
+
+func (spr *GeoJSONStandardPlacesResult) Cessation() *edtf.EDTFDate {
+	return nil
 }
 
 func (spr *GeoJSONStandardPlacesResult) Country() string {
