@@ -20,7 +20,7 @@ func TestWhosOnFirstSPR(t *testing.T) {
 	spr, err := f.SPR()
 
 	if err != nil {
-		t.Fatalf("Failed to create SPR, %v", err)
+		t.Fatalf("SAD Failed to create SPR, %v", err)
 	}
 
 	if spr.Id() != "101851199" {
