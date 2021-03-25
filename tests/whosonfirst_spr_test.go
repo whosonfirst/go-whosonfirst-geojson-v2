@@ -51,4 +51,10 @@ func TestWhosOnFirstSPR(t *testing.T) {
 		t.Fatal("Invalid SPR Cessation() result")
 	}
 
+	belongsto := spr.BelongsTo()
+
+	if len(belongsto) != 8 {
+		t.Fatalf("Invalid SPR BelongsTo() result")
+	}
+
 }

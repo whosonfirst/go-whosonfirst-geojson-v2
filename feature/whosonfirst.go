@@ -296,6 +296,7 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 
 	superseded_by := whosonfirst.SupersededBy(f)
 	supersedes := whosonfirst.Supersedes(f)
+	belongsto := whosonfirst.BelongsTo(f)
 
 	lastmod := whosonfirst.LastModified(f)
 
@@ -309,6 +310,7 @@ func (f *WOFFeature) SPR() (spr.StandardPlacesResult, error) {
 		WOFPath:         path,
 		WOFSupersedes:   supersedes,
 		WOFSupersededBy: superseded_by,
+		WOFBelongsTo:    belongsto,
 		EDTFInception:   inception,
 		EDTFCessation:   cessation,
 		MZURI:           uri,
