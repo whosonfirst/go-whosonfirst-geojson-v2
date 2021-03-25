@@ -8,7 +8,7 @@ import (
 
 type KnownUnknownFlag struct {
 	flags.ExistentialFlag
-	flag       int64
+	flag       int64 // https://github.com/whosonfirst/go-whosonfirst-flags/issues/2
 	status     bool
 	confidence bool
 }
