@@ -254,6 +254,10 @@ func (spr *GeoJSONStandardPlacesResult) Supersedes() []int64 {
 	return []int64{}
 }
 
+func (spr *GeoJSONStandardPlacesResult) BelongsTo() []int64 {
+	return []int64{}
+}
+
 func (spr *GeoJSONStandardPlacesResult) LastModified() int64 {
 	return -1
 }

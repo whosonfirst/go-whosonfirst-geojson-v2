@@ -280,6 +280,10 @@ func (spr *WOFAltStandardPlacesResult) Supersedes() []int64 {
 	return []int64{}
 }
 
+func (spr *WOFAltStandardPlacesResult) BelongsTo() []int64 {
+	return []int64{}
+}
+
 func (spr *WOFAltStandardPlacesResult) LastModified() int64 {
 	return -1
 }
