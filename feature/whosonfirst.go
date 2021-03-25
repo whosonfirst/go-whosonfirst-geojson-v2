@@ -37,7 +37,7 @@ type WOFStandardPlacesResult struct {
 	WOFPath                  string  `json:"wof:path"`
 	WOFSupersededBy          []int64 `json:"wof:superseded_by"`
 	WOFSupersedes            []int64 `json:"wof:supersedes"`
-	WOFBelongsTo            []int64 `json:"wof:belongsto"`	
+	WOFBelongsTo             []int64 `json:"wof:belongsto"`
 	MZURI                    string  `json:"mz:uri"`
 	MZLatitude               float64 `json:"mz:latitude"`
 	MZLongitude              float64 `json:"mz:longitude"`
