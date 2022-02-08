@@ -2,9 +2,9 @@
 
 Go package for working with URIs for Who's On First documents
 
-## Install
+## Documentation
 
-All of this package's dependencies are bundled with the code in the `vendor` directory.
+[![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-whosonfirst-uri.svg)](https://pkg.go.dev/github.com/whosonfirst/go-whosonfirst-uri)
 
 ## Example
 

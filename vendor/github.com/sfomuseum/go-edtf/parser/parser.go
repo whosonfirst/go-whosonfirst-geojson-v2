@@ -1,3 +1,4 @@
+// package parser provides methods for parsing and validating EDTF strings.
 package parser
 
 import (
@@ -6,8 +7,10 @@ import (
 	"github.com/sfomuseum/go-edtf/level0"
 	"github.com/sfomuseum/go-edtf/level1"
 	"github.com/sfomuseum/go-edtf/level2"
+	_ "log"
 )
 
+// Return a boolean value indicating whether a string is a valid EDTF date.
 func IsValid(edtf_str string) bool {
 
 	if level0.IsLevel0(edtf_str) {
@@ -30,6 +33,7 @@ func IsValid(edtf_str string) bool {
 	}
 }
 
+// Parse a string in to an edtf.EDTFDate instance.
 func ParseString(edtf_str string) (*edtf.EDTFDate, error) {
 
 	if level0.IsLevel0(edtf_str) {
@@ -76,6 +80,7 @@ func ParseString(edtf_str string) (*edtf.EDTFDate, error) {
 	return nil, edtf.Unrecognized("Invalid or unsupported EDTF string", edtf_str)
 }
 
+// Determine which EDTF level and corresponding EDTF feature a string matches.
 func Matches(edtf_str string) (int, string, error) {
 
 	if level0.IsLevel0(edtf_str) {

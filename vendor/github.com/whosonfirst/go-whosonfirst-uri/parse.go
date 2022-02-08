@@ -9,12 +9,17 @@ import (
 	"strings"
 )
 
+// URI_REGEXP is the regular expression used to parse Who's On First URIs.
+const URI_REGEXP string = `^(\d+)(?:\-alt(?:\-([a-zA-Z0-9_]+(?:\-[a-zA-Z0-9_]+(?:\-[a-zA-Z0-9_\-]+)?)?)))?(?:\.[^\.]+|\/)?$`
+
+// re_uri is the internal *regexp.Regexp instance used to parse Who's On First URIs.
 var re_uri *regexp.Regexp
 
 func init() {
-	re_uri = regexp.MustCompile(`^(\d+)(?:\-alt(?:\-([a-zA-Z0-9_]+(?:\-[a-zA-Z0-9_]+(?:\-[a-zA-Z0-9_\-]+)?)?)))?(?:\.[^\.]+|\/)?$`)
+	re_uri = regexp.MustCompile(URI_REGEXP)
 }
 
+// ParseURI will parse a Who's On First URI into its unique ID and any optional "alternate" geometry information.
 func ParseURI(path string) (int64, *URIArgs, error) {
 
 	abs_path, err := filepath.Abs(path)
@@ -75,8 +80,7 @@ func ParseURI(path string) (int64, *URIArgs, error) {
 	return wofid, args, nil
 }
 
-//
-
+// ISWOFFile returns a boolean value indicating whether a path is a valid Who's On First URI.
 func IsWOFFile(path string) (bool, error) {
 
 	_, _, err := ParseURI(path)
@@ -94,6 +98,7 @@ func IsWOFFile(path string) (bool, error) {
 	return true, nil
 }
 
+// ISAltFile returns a boolean value indicating whether a path is a valid Who's On First URI for an "alternate" geometry.
 func IsAltFile(path string) (bool, error) {
 
 	_, uri_args, err := ParseURI(path)
@@ -106,6 +111,7 @@ func IsAltFile(path string) (bool, error) {
 	return is_alt, nil
 }
 
+// AltGeomFromPath parses a path and returns its *AltGeom instance if it is a valid Who's On First "alternate" geometry URI.
 func AltGeomFromPath(path string) (*AltGeom, error) {
 
 	_, uri_args, err := ParseURI(path)
@@ -121,13 +127,15 @@ func AltGeomFromPath(path string) (*AltGeom, error) {
 	return uri_args.AltGeom, nil
 }
 
+// IdFromPath parses a path and return its unique Who's On First ID.
 func IdFromPath(path string) (int64, error) {
 
 	id, _, err := ParseURI(path)
 	return id, err
 }
 
-func RepoFromPath(path string) (string, error) {
+// RepoFromPath parses a path and if it is a valid whosonfirst-data Who's On First URI returns a GitHub repository name.
+func WhosOnFirstDataRepoFromPath(path string) (string, error) {
 
 	abs_path, err := filepath.Abs(path)
 

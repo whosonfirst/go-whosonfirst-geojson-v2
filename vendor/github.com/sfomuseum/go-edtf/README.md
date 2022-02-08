@@ -11,6 +11,10 @@ A Go package for parsing Extended DateTime Format (EDTF) date strings. It is com
 * [Tests](#tests)
 * [Reporting Bugs and Issues](#reporting-bugs-and-issues)
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/sfomuseum/go-edtf.svg)](https://pkg.go.dev/github.com/sfomuseum/go-edtf)
+
+_At this time Go reference documentation is incomplete._
+
 ## Background
 
 The following is taken from the [EDTF website](https://www.loc.gov/standards/datetime/background.html):
@@ -205,6 +209,26 @@ To build binary versions of these tools run the `cli` Makefile target. For examp
 ```
 $> make cli
 go build -mod vendor -o bin/parse cmd/parse/main.go
+go build -mod vendor -o bin/matches cmd/matches/main.go
+```
+
+### matches
+
+Parse one or more EDTF strings and emit the EDTF level and feature name they match.
+
+```
+> ./bin/matches -h
+Parse one or more EDTF strings and emit the EDTF level and feature name they match.
+Usage:
+	 ./bin/matches edtf_string(N) edtf_string(N)
+```
+
+For example:
+
+```
+> ./bin/matches 193X 2021-10-10T00:24:00Z
+193X level 1 (Unspecified digit(s) from the right)
+2021-10-10T00:24:00Z level 0 (Date and Time)
 ```
 
 ### parse
