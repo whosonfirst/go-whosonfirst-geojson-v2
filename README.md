@@ -18,6 +18,8 @@ The goal of this package was to replace the existing [go-whosonfirst-geojson](ht
 
 Yeah, I don't really like it either but this package is basically 100% backwards incompatible with `github.com/whosonfirst/go-whosonfirst-geojson` and while I don't _really_ think anyone else is using it I don't like the idea of suddenly breaking everyone's code.
 
+Also, it was released before Go introduced formal versioning so the (unfortunate) decision was made to use `-v2` instead of `/v2`.
+
 ## Interfaces
 
 Unlike the first `go-whosonfirst-geojson` package this one at least attempts to define a simplified interface for working with GeoJSON features. These are still in flux.
