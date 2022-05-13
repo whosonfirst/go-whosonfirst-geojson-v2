@@ -2,21 +2,9 @@
 
 Go tools for working with Who's On First documents
 
-## Install
-
-You will need to have both `Go` (specifically [version 1.12](https://golang.org/dl/) or higher because we're using [Go modules](https://github.com/golang/go/wiki/Modules)) and the `make` programs installed on your computer. Assuming you do just type:
-
-```
-make tools
-```
-
-All of this package's dependencies are bundled with the code in the `vendor` directory.
-
 ## Notice
 
-This package is stuck in that awkward in-between place where it is basically deprecated but still being included as a dependency to a lot of other packages.
-
-Which is to say: While this package is not officially deprecated yet it is on its way to being deprecated. Bug fixes will be applied when necessary but otherwise all work is being applied to the [whosonfirst/go-whosonfirst-feature](https://github.com/whosonfirst/go-whosonfirst-feature) package.
+This package is officially. It is still being used in other packages but they are slowly being updated.
 
 Basically this package tries to do too many things, specifically around defining GeoJSON-related structs and interfaces. It's not really worth the effort and better to use [paulmach/orb/geojson](https://github.com/paulmach/orb) for geometry and GeoJSON-related operations and [tidwall/gjson](https://github.com/tidwall/gjson] for query-related operations using plain-vanilla `[]byte` elements. This is the approach taken by the `go-whosonfirst-feature` package.
 
